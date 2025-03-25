@@ -59,15 +59,19 @@ const Register = () => {
 
   return (
     <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f4f6f8",
-      }}
-    >
+    sx={{
+      minHeight: "100vh", // Ensure content can expand
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      backgroundColor: "#f4f6f8",
+      paddingTop: "80px",
+      overflowY: "auto", // Enable scrolling
+    }}
+  >
+  
+
       {/* Header Section */}
       <Box
         sx={{

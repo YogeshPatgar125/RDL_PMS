@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Container,
   Grid,
@@ -38,6 +37,7 @@ const Login = () => {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#f4f6f8",
+        paddingX: { xs: 2, sm: 4, md: 6 },
       }}
     >
       {/* Header */}
@@ -59,7 +59,13 @@ const Login = () => {
         </Typography>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: 10 }}>
+      <Container
+        maxWidth="lg"
+        sx={{
+          mt: 10,
+          width: { xs: "90%", sm: "80%", md: "100%" },
+        }}
+      >
         <Grid container spacing={3} alignItems="center" justifyContent="center">
           {/* Left Side - Image */}
           <Grid item xs={12} md={6} display="flex" justifyContent="center">
@@ -68,7 +74,8 @@ const Login = () => {
               alt="Project Management"
               style={{
                 width: "100%",
-                maxWidth: "600px",
+                maxWidth: "500px",
+                height: "auto",
                 borderRadius: "10px",
               }}
             />
@@ -76,11 +83,16 @@ const Login = () => {
 
           {/* Right Side - Form */}
           <Grid item xs={12} md={5}>
-            <Card elevation={3} sx={{ borderRadius: "10px", p: 3 }}>
+            <Card
+              elevation={3}
+              sx={{
+                borderRadius: "10px",
+                p: { xs: 2, sm: 3, md: 4 },
+              }}
+            >
               <CardContent>
                 {forgotPassword ? (
                   <>
-                    {/* Forgot Password UI */}
                     <Typography variant="h6" sx={{ textAlign: "center", mb: 2 }}>
                       Forgot Password
                     </Typography>
@@ -173,7 +185,6 @@ const Login = () => {
                   </>
                 ) : (
                   <>
-                    {/* Login UI */}
                     <TextField
                       fullWidth
                       label="Enter your Email"

@@ -34,7 +34,7 @@ const ProjectDashboard = () => {
   return (
     <>
       <Navbar />
-      <Box p={3} sx={{ backgroundColor: '#f5f9ff', minHeight: '100vh' }}>
+      <Box p={3} sx={{ backgroundColor: '#f5f9ff', minHeight: '100vh', maxHeight: '100vh', overflowY: 'auto', overflowX: 'hidden' }}>
         <Typography variant="h4" fontWeight="bold" color="#1e3a8a" mb={3}>
           Project Dashboard
         </Typography>
@@ -74,25 +74,25 @@ const ProjectDashboard = () => {
           Project List
         </Typography>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={3} >
           <Grid item xs={12} md={8}>
             <Card sx={{ backgroundColor: '#ffffff', borderRadius: '15px', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)' }}>
               <CardContent>
                 <Grid container spacing={1} sx={{ fontWeight: 'bold', mb: 1 }}>
                   <Grid item xs={1}><Typography>#</Typography></Grid>
                   <Grid item xs={3}><Typography>Project Name</Typography></Grid>
-                  <Grid item xs={2}><Typography>Assigned To</Typography></Grid>
+                  <Grid item xs={3}><Typography>Assigned To</Typography></Grid>
                   <Grid item xs={2}><Typography>Due Date</Typography></Grid>
-                  <Grid item xs={2}><Typography>Status</Typography></Grid>
+                  <Grid item xs={3}><Typography>Status</Typography></Grid>
                 </Grid>
                 <Divider />
                 {projectData.map((project, index) => (
                   <Grid container spacing={1} key={index} sx={{ py: 1 }}>
                     <Grid item xs={1}><Typography>{index + 1}</Typography></Grid>
                     <Grid item xs={3}><Typography>{project.name}</Typography></Grid>
-                    <Grid item xs={2}><Typography>{project.assignedTo}</Typography></Grid>
+                    <Grid item xs={3}><Typography>{project.assignedTo}</Typography></Grid>
                     <Grid item xs={2}><Typography>{project.dueDate}</Typography></Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                       <Typography fontWeight="bold" color={
                         project.status === 'Completed' ? '#4caf50' :
                         project.status === 'Cancelled' ? '#f44336' : '#ff9800'
