@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Container,
   Grid,
@@ -24,6 +26,7 @@ const Login = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -201,16 +204,25 @@ const Login = () => {
                       Login
                     </Button>
                     <Typography textAlign="center" sx={{ mt: 2 }}>
-                      <Button
-                        sx={{ color: "#3f85f7", textTransform: "none" }}
-                        onClick={() => {
-                          setForgotPassword(true);
-                          setOtpSent(false);
-                          setOtpVerified(false);
-                        }}
-                      >
-                        Forgot Password?
-                      </Button>
+                      <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+                        <Button
+                          sx={{ color: "#3f85f7", textTransform: "none", fontSize: "0.9rem" }}
+                          onClick={() => navigate("/register")}
+                        >
+                          New Register?
+                        </Button>
+
+                        <Button
+                          sx={{ color: "#3f85f7", textTransform: "none", fontSize: "0.9rem" }}
+                          onClick={() => {
+                            setForgotPassword(true);
+                            setOtpSent(false);
+                            setOtpVerified(false);
+                          }}
+                        >
+                          Forgot Password?
+                        </Button>
+                      </Box>
                     </Typography>
                   </>
                 )}

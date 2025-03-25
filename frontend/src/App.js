@@ -7,12 +7,16 @@ import Navbar from "./components/Navbar";
 import Projects from "./pages/Projects";
 import Employees from "./pages/Employees";
 import Report from "./pages/Report";
+import Register from "./pages/Register"
+
 function App() {
   return (
     <Router>
       <Routes>
 
         <Route path="/" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
+
         <Route path="/Navbar" element={<Navbar />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
