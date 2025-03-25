@@ -4,7 +4,6 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
 import Navbar from '../components/Navbar';
 
-
 const ProjectDashboard = () => {
   const projectData = [
     { name: 'Website Redesign', assignedTo: 'Alice', dueDate: '25 Mar 2025', status: 'Pending' },
@@ -27,81 +26,109 @@ const ProjectDashboard = () => {
     labels: ['Completed', 'Pending', 'Cancelled'],
     datasets: [{
       data: [statuses.completed, statuses.pending, statuses.cancelled],
-      backgroundColor: ['#66bb6a', '#ff7043', '#ffeb3b'],
-      borderWidth: 1,
+      backgroundColor: ['#4caf50', '#ff9800', '#f44336'],
+      borderWidth: 2,
     }],
   };
 
   return (
     <>
       <Navbar />
-      <Box p={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={3}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Total Projects</Typography>
-                <Typography variant="h4" color="primary">8</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+      <Box p={3} sx={{ backgroundColor: '#f5f9ff', minHeight: '100vh' }}>
+        <Typography variant="h4" fontWeight="bold" color="#1e3a8a" mb={3}>
+          Project Dashboard
+        </Typography>
 
-          <Grid item xs={12} md={3}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Team Leaders</Typography>
-                <Typography variant="h4" color="green">10</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Employees</Typography>
-                <Typography variant="h4" color="error">35</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Project Status</Typography>
-                <Doughnut data={chartData} />
-              </CardContent>
-            </Card>
-          </Grid>
+        <Grid container spacing={3}>
+          {['Total Projects', 'Team Leaders', 'Employees'].map((title, index) => (
+            <Grid item xs={12} sm={4} key={index}>
+              <Card
+                sx={{
+                  background: `linear-gradient(145deg, ${
+                    index === 0 ? '#b3d4fc' : index === 1 ? '#cce5ff' : '#e2f1ff'
+                  }, white)`,
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '15px',
+                  transition: '0.3s',
+                  '&:hover': { boxShadow: 8, transform: 'scale(1.05)' },
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold" color="#1e3a8a">
+                    {title}
+                  </Typography>
+                  <Typography variant="h3" color={
+                    index === 0 ? '#1e3a8a' : index === 1 ? '#1565c0' : '#0d47a1'
+                  } fontWeight="bold">
+                    {index === 0 ? 8 : index === 1 ? 10 : 35}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
 
-        <Divider sx={{ my: 3 }} />
+        <Divider sx={{ my: 4 }} />
 
-        <Typography variant="h6">Project List</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Card>
+        <Typography variant="h5" fontWeight="bold" color="#1e3a8a" sx={{ mb: 2 }}>
+          Project List
+        </Typography>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={8}>
+            <Card sx={{ backgroundColor: '#ffffff', borderRadius: '15px', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)' }}>
               <CardContent>
-                <Grid container spacing={1}>
-                  <Grid item xs={1}><Typography fontWeight="bold">Sl No</Typography></Grid>
-                  <Grid item xs={3}><Typography fontWeight="bold">Project Name</Typography></Grid>
-                  <Grid item xs={2}><Typography fontWeight="bold">Assigned To</Typography></Grid>
-                  <Grid item xs={2}><Typography fontWeight="bold">Due Date</Typography></Grid>
-                  <Grid item xs={2}><Typography fontWeight="bold">Status</Typography></Grid>
+                <Grid container spacing={1} sx={{ fontWeight: 'bold', mb: 1 }}>
+                  <Grid item xs={1}><Typography>#</Typography></Grid>
+                  <Grid item xs={3}><Typography>Project Name</Typography></Grid>
+                  <Grid item xs={2}><Typography>Assigned To</Typography></Grid>
+                  <Grid item xs={2}><Typography>Due Date</Typography></Grid>
+                  <Grid item xs={2}><Typography>Status</Typography></Grid>
                 </Grid>
+                <Divider />
                 {projectData.map((project, index) => (
-                  <Grid container spacing={1} key={index}>
+                  <Grid container spacing={1} key={index} sx={{ py: 1 }}>
                     <Grid item xs={1}><Typography>{index + 1}</Typography></Grid>
                     <Grid item xs={3}><Typography>{project.name}</Typography></Grid>
                     <Grid item xs={2}><Typography>{project.assignedTo}</Typography></Grid>
                     <Grid item xs={2}><Typography>{project.dueDate}</Typography></Grid>
                     <Grid item xs={2}>
-                      <Typography color={
-                        project.status === 'Completed' ? 'green' :
-                        project.status === 'Cancelled' ? 'red' : 'orange'
-                      }>{project.status}</Typography>
+                      <Typography fontWeight="bold" color={
+                        project.status === 'Completed' ? '#4caf50' :
+                        project.status === 'Cancelled' ? '#f44336' : '#ff9800'
+                      }>
+                        {project.status}
+                      </Typography>
                     </Grid>
                   </Grid>
                 ))}
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card 
+              sx={{ 
+                backgroundColor: '#ffffff', 
+                borderRadius: '15px', 
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center',
+              }}
+            >
+              <CardContent sx={{ width: '100%', height: '100%', p: 2 }}>
+                <Typography variant="h6" fontWeight="bold" align="center" color="#1e3a8a" sx={{ mb: 2 }}>
+                  Project Status
+                </Typography>
+                <Doughnut 
+                  data={chartData} 
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                  }}
+                  style={{ maxHeight: '250px' }} 
+                />
               </CardContent>
             </Card>
           </Grid>
