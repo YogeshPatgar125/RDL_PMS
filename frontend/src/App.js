@@ -4,8 +4,9 @@ import "./App.css";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard"
 import Navbar from "./components/Navbar";
-
-
+import Projects from "./pages/Projects";
+import Employees from "./pages/Employees";
+import Report from "./pages/Report";
 function App() {
   return (
     <Router>
@@ -14,6 +15,9 @@ function App() {
         <Route path="/" element={<Login/>} />
         <Route path="/Navbar" element={<Navbar />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/employees" element= {<Employees/>}/>
+        <Route path="/reports" element={<Report />} />
       </Routes>
     </Router>
   );
