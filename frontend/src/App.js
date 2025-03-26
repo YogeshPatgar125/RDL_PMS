@@ -13,6 +13,8 @@ import EmNav from "./components/Em_Navbar";
 import Assign from "./pages/Assign_Lead"
 import Cancel from "./pages/Cancel"
 import Pending from "./pages/Pending"
+import ReportIssueTable from "./pages/Complaint"
+import DailyUpdateForm from "./pages/Dailyupdate"
 
 
 
@@ -33,6 +35,8 @@ function App() {
         <Route path="/assign" element={<Assign/>} />
         <Route path="/cancel" element={<Cancel/>} />
         <Route path="/pending" element={<Pending/>} />
+        <Route path="/complaint" element ={<ReportIssueTable />} />
+        <Route path="/dailyupdate" element ={<DailyUpdateForm />} />
       </Routes>
     </Router>
   );
