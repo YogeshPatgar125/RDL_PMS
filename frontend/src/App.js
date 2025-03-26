@@ -17,6 +17,7 @@ import ReportIssueTable from "./pages/Complaint"
 import DailyUpdateForm from "./pages/Dailyupdate"
 import TL_Dashboard from "./pages/TL_Dashboard";
 import EM_Dashboard from "./pages/Em_Dashboard";
+import Complete from "./pages/Complete";
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
         <Route path="/dailyupdate" element ={<DailyUpdateForm />} />
         <Route path="/emdashboard" element ={<EM_Dashboard/>} />
         <Route path="/tldashboard" element ={<TL_Dashboard/>} />
+        <Route path="/complete" element ={<Complete/>} />
       </Routes>
     </Router>
   );

@@ -1,37 +1,33 @@
 import React, { useState } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-  TextField,
-  InputAdornment,
-  Typography,
-} from "@mui/material";
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Box,
+    TextField,
+    InputAdornment,
+    Typography,
+    IconButton,
+    Button, 
+  } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import Navbar from "../components/Navbar";
 
-const allProjects = [
-  { id: 1, name: "Website Redesign", leader: "Alice", dueDate: "25 Mar 2025" },
-  { id: 2, name: "Mobile App Development", leader: "Bob", dueDate: "30 Mar 2025" },
-  { id: 3, name: "Marketing Campaign", leader: "Charlie", dueDate: "18 Mar 2025" },
-  { id: 4, name: "CRM Integration", leader: "David", dueDate: "28 Mar 2025" },
-  { id: 5, name: "Security Audit", leader: "Eva", dueDate: "5 Apr 2025" },
-  { id: 6, name: "Cloud Migration", leader: "Frank", dueDate: "10 Apr 2025" },
-  { id: 7, name: "New Feature Rollout", leader: "Grace", dueDate: "15 Apr 2025" },
-  { id: 8, name: "Data Analytics Dashboard", leader: "Hannah", dueDate: "20 Apr 2025" },
-  { id: 9, name: "E-Commerce Platform", leader: "Ian", dueDate: "25 Apr 2025" },
-  { id: 10, name: "AI Chatbot Implementation", leader: "Jack", dueDate: "30 Apr 2025" },
-  { id: 11, name: "Blockchain Integration", leader: "Kate", dueDate: "5 May 2025" },
-  { id: 12, name: "Cybersecurity Enhancement", leader: "Leo", dueDate: "10 May 2025" },
+const completedProjects = [
+  { id: 1, name: "Website Redesign", leader: "Alice", completedOn: "25 Mar 2025", reportUrl: "/reports/website-redesign.pdf" },
+  { id: 2, name: "Mobile App Development", leader: "Bob", completedOn: "30 Mar 2025", reportUrl: "/reports/mobile-app.pdf" },
+  { id: 3, name: "Marketing Campaign", leader: "Charlie", completedOn: "18 Mar 2025", reportUrl: "/reports/marketing-campaign.pdf" },
+  { id: 4, name: "CRM Integration", leader: "David", completedOn: "28 Mar 2025", reportUrl: "/reports/crm-integration.pdf" },
+  { id: 5, name: "Security Audit", leader: "Eva", completedOn: "5 Apr 2025", reportUrl: "/reports/security-audit.pdf" },
+  { id: 6, name: "Cloud Migration", leader: "Frank", completedOn: "10 Apr 2025", reportUrl: "/reports/cloud-migration.pdf" },
 ];
 
-const PendingPage = () => {
+const Complete = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 5;
@@ -43,7 +39,7 @@ const PendingPage = () => {
   };
 
   // Filter projects based on search term
-  const filteredProjects = allProjects.filter(
+  const filteredProjects = completedProjects.filter(
     (project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.leader.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,6 +58,14 @@ const PendingPage = () => {
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  // Handle PDF download
+  const handleDownload = (url) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = url.substring(url.lastIndexOf("/") + 1);
+    link.click();
   };
 
   return (
@@ -99,39 +103,39 @@ const PendingPage = () => {
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#FFB300" }}> {/* Yellowish Orange */}
+            <TableRow sx={{ backgroundColor: "#4CAF50" }}>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Sl.No</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Project Name</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Leader</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Due Date</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Completed On</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Download</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {currentProjects.length > 0 ? (
               currentProjects.map((project, index) => (
                 <TableRow
-                  key={indexOfFirstProject + index} // Unique key
+                  key={indexOfFirstProject + index}
                   sx={{
-                    backgroundColor: index % 2 === 0 ? "#FFECB3" : "white", // Lighter yellow-orange
-                    "&:hover": { backgroundColor: "#FFCC80" }, // Slightly darker shade
+                    backgroundColor: index % 2 === 0 ? "#E8F5E9" : "white",
+                    "&:hover": { backgroundColor: "#C8E6C9" },
                   }}
                 >
                   <TableCell>{indexOfFirstProject + index + 1}</TableCell>
                   <TableCell>{project.name}</TableCell>
                   <TableCell>{project.leader}</TableCell>
-                  <TableCell>{project.dueDate}</TableCell>
+                  <TableCell>{project.completedOn}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="contained"
+                    <IconButton
+                      onClick={() => handleDownload(project.reportUrl)}
                       sx={{
-                        backgroundColor: "#FB8C00", // Deep orange
-                        "&:hover": { backgroundColor: "#FFB74D" }, // Lighter orange on hover
+                        color: "#4CAF50",
+                        "&:hover": { color: "#388E3C" },
+                        transition: "color 0.2s ease",
                       }}
-                      size="small"
                     >
-                      Details
-                    </Button>
+                      <CloudDownloadOutlinedIcon fontSize="medium" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
@@ -152,11 +156,7 @@ const PendingPage = () => {
           variant="contained"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          sx={{
-            backgroundColor: "#FB8C00",
-            "&:hover": { backgroundColor: "#FFB74D" },
-            mx: 1,
-          }}
+          sx={{ mx: 1 }}
         >
           Previous
         </Button>
@@ -169,11 +169,7 @@ const PendingPage = () => {
           variant="contained"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          sx={{
-            backgroundColor: "#FB8C00",
-            "&:hover": { backgroundColor: "#FFB74D" },
-            mx: 1,
-          }}
+          sx={{ mx: 1 }}
         >
           Next
         </Button>
@@ -182,4 +178,4 @@ const PendingPage = () => {
   );
 };
 
-export default PendingPage;
+export default Complete;
