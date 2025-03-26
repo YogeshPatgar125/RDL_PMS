@@ -15,7 +15,8 @@ import Cancel from "./pages/Cancel"
 import Pending from "./pages/Pending"
 import ReportIssueTable from "./pages/Complaint"
 import DailyUpdateForm from "./pages/Dailyupdate"
-
+import TL_Dashboard from "./pages/TL_Dashboard";
+import EM_Dashboard from "./pages/Em_Dashboard";
 
 function App() {
 
@@ -36,6 +37,8 @@ function App() {
         <Route path="/pending" element={<Pending/>} />
         <Route path="/complaint" element ={<ReportIssueTable />} />
         <Route path="/dailyupdate" element ={<DailyUpdateForm />} />
+        <Route path="/emdashboard" element ={<EM_Dashboard/>} />
+        <Route path="/tldashboard" element ={<TL_Dashboard/>} />
       </Routes>
     </Router>
   );
