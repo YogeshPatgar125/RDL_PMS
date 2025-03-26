@@ -11,6 +11,8 @@ import Register from "./pages/Register";
 import LeadNav from "./components/TL_Navbar";
 import EmNav from "./components/Em_Navbar";
 import Assign from "./pages/Assign_Lead"
+import Cancel from "./pages/Cancel"
+import Pending from "./pages/Pending"
 
 
 
@@ -29,6 +31,8 @@ function App() {
         <Route path="/tl_navbar" element={<LeadNav/>} />
         <Route path="/em_navbar" element={<EmNav/>} />
         <Route path="/assign" element={<Assign/>} />
+        <Route path="/cancel" element={<Cancel/>} />
+        <Route path="/pending" element={<Pending/>} />
       </Routes>
     </Router>
   );

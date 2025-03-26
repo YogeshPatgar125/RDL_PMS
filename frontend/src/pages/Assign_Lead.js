@@ -15,6 +15,10 @@ const teamMembers = [
   { name: "Ian", role: "Backend Developer" },
   { name: "Julia", role: "Product Manager" },
   { name: "Kevin", role: "Cloud Engineer" },
+  { name: "Hannah", role: "Data Scientist" },
+  { name: "Ian", role: "Backend Developer" },
+  { name: "Julia", role: "Product Manager" },
+  { name: "Kevin", role: "Cloud Engineer" },
 ];
 
 const AssigntoLead = () => {
@@ -22,15 +26,17 @@ const AssigntoLead = () => {
     <div>
       <Navbar />
       {/* Team Members Grid */}
-      <Grid container spacing={3} sx={{ padding: 3 }}>
+      <Grid container spacing={3} sx={{ padding: 5 }}>
         {teamMembers.map((member, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card
               sx={{
                 textAlign: "center",
-                padding: 3,
+                padding: 7,
                 borderRadius: 2,
                 boxShadow: 3,
+                maxWidth: 230,  // Set a fixed max width (adjust as needed)
+                 margin: "auto"
               }}
             >
               <Avatar sx={{ width: 70, height: 70, margin: "auto", backgroundColor: "#ddd" }} />
