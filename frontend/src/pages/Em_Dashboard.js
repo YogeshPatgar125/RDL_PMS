@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, CardContent, Typography, Grid, Box, Divider } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
-import Navbar from '../components/Navbar';
+import Em_Navbar from '../components/Em_Navbar';
 
-const Dashboard = () => {
+const Em_Dashboard = () => {
   const projectData = [
     { name: 'Website Redesign', assignedTo: 'Alice', dueDate: '25 Mar 2025', status: 'Pending' },
     { name: 'Mobile App Development', assignedTo: 'Bob', dueDate: '30 Mar 2025', status: 'Cancelled' },
@@ -31,32 +31,29 @@ const Dashboard = () => {
     }],
   };
 
-  // Assuming 10 team leads for example
-  const totalTeamLeads = 10;
-
   return (
     <>
-      <Navbar />
+      <Em_Navbar />
       <Box 
         p={3} 
         sx={{ 
           backgroundColor: '#f5f9ff', 
           minHeight: '100vh', 
-          overflowY: 'auto', 
+          overflowY: 'auto', // Single global scrollbar
           overflowX: 'hidden' 
         }}
       >
         <Typography variant="h4" fontWeight="bold" color="#1e3a8a" mb={3}>
-          Admin Dashboard
+          Employee Dashboard
         </Typography>
 
         <Grid container spacing={3}>
-          {['Total Projects', 'Employees', 'Team Leads'].map((title, index) => (
-            <Grid item xs={12} sm={4} key={index}>
+          {['Total Projects', 'Employees'].map((title, index) => (
+            <Grid item xs={12} sm={6} key={index}>
               <Card
                 sx={{
                   background: `linear-gradient(145deg, ${
-                    index === 0 ? '#b3d4fc' : index === 1 ? '#e2f1ff' : '#cce5ff'
+                    index === 0 ? '#b3d4fc' : '#e2f1ff'
                   }, white)`,
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
                   borderRadius: '15px',
@@ -68,11 +65,8 @@ const Dashboard = () => {
                   <Typography variant="h6" fontWeight="bold" color="#1e3a8a">
                     <b>{title}</b>
                   </Typography>
-                  <Typography variant="h3" color={ 
-                    index === 0 ? '#1e3a8a' : 
-                    index === 1 ? '#0d47a1' : '#1565c0' 
-                  } fontWeight="bold">
-                    <b>{index === 0 ? 8 : index === 1 ? 35 : totalTeamLeads}</b>
+                  <Typography variant="h3" color={index === 0 ? '#1e3a8a' : '#0d47a1'} fontWeight="bold">
+                    <b>{index === 0 ? 8 : 35}</b>
                   </Typography>
                 </CardContent>
               </Card>
@@ -150,4 +144,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Em_Dashboard;
