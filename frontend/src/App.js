@@ -7,7 +7,9 @@ import Navbar from "./components/Navbar";
 import Projects from "./pages/Projects";
 import Employees from "./pages/Employees";
 import Report from "./pages/Report";
-import Register from "./pages/Register"
+import Register from "./pages/Register";
+import TL_Navbar from "./components/TL_Navbar";
+import Em_Navbar from "./components/Em_Navbar";
 
 
 
@@ -23,6 +25,8 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/employees" element= {<Employees/>}/>
         <Route path="/reports" element={<Report />} />
+        <Route path="/tlnavbar" element={<TL_Navbar/>} />
+        <Route path="/emnavbar" element={<Em_Navbar/>} />
       </Routes>
     </Router>
   );
