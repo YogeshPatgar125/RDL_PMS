@@ -17,7 +17,6 @@ import ReportIssueTable from "./pages/Complaint"
 import DailyUpdateForm from "./pages/Dailyupdate"
 
 
-
 function App() {
 
   return (
