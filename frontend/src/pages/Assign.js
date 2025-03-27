@@ -18,7 +18,7 @@ const teamMembers = [
   { name: "Kevin", role: "Cloud Engineer" },
 ];
 
-const  Assign_Lead = () => {
+const AssigntoLead = () => {
   const navigate = useNavigate();
 
   const handleAssign = (member) => {
@@ -84,4 +84,4 @@ const  Assign_Lead = () => {
   );
 };
 
-export default Assign_Lead;
+export default AssigntoLead;

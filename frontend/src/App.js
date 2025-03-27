@@ -4,11 +4,10 @@ import "./App.css";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Ad_Dashboard"
 import Navbar from "./components/Navbar";
-import Projects from "./pages/Projects";
 import Employees from "./pages/Employees";
 import Report from "./pages/Report";
 import Register from "./pages/Register";
-import Assign from "./pages/Assign_Lead"
+import Assign from "./pages/Assign"
 import Cancel from "./pages/Cancel"
 import Pending from "./pages/Pending"
 import ReportIssueTable from "./pages/Complaint"
@@ -16,6 +15,8 @@ import DailyUpdateForm from "./pages/Update"
 import TLDashboard from "./pages/TL_Dashboard";
 import EMDashboard from "./pages/Em_Dashboard";
 import Complete from "./pages/Complete";
+import Addproject from "./pages/Addproject";
+import Assign_Lead from "./pages/Assign_Lead";
 
 function App() {
 
@@ -27,7 +28,7 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route path="/Navbar" element={<Navbar />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/projects" element={<Projects />} />
+       
         <Route path="/employees" element= {<Employees/>}/>
         <Route path="/reports" element={<Report />} />
         <Route path="/assign" element={<Assign/>} />
@@ -38,6 +39,8 @@ function App() {
         <Route path="/emdashboard" element ={<EMDashboard/>}/>
         <Route path="/tldashboard" element ={<TLDashboard/>}/>
         <Route path="/complete" element ={<Complete/>}/>
+        <Route path="/addproject" element ={<Addproject/>}/>
+        <Route path="/assignlead" element ={<Assign_Lead/>}/>
       </Routes>
     </Router>
   );

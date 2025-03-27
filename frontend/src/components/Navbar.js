@@ -56,7 +56,7 @@ const Navbar = () => {
   const navLinks = {
     Admin: [
       { label: "Dashboard", path: "/dashboard" },
-      { label: "Projects", path: "/projects" },
+      { label: "Projects", path: "/addproject" },
       { label: "Employees", path: "/assign" },
     ],
     TeamLead: [
