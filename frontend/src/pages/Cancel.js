@@ -14,7 +14,6 @@ import {
   InputAdornment
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import Navbar from "../components/Navbar";
 
 const cancelledProjects = [
   { id: 1, name: "Website Redesign", leader: "Alice" },
@@ -63,7 +62,6 @@ const CancelPage = () => {
 
   return (
     <div>
-      <Navbar />
 
       {/* Search Bar */}
       <Box display="flex" justifyContent="flex-end" mt={2} mr={3}>

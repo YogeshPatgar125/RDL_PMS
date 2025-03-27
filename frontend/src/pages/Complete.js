@@ -16,7 +16,6 @@ import {
   } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-import Navbar from "../components/Navbar";
 
 const completedProjects = [
   { id: 1, name: "Website Redesign", leader: "Alice", completedOn: "25 Mar 2025", reportUrl: "/reports/website-redesign.pdf" },
@@ -70,7 +69,6 @@ const Complete = () => {
 
   return (
     <div>
-      <Navbar />
 
       {/* Search Bar */}
       <Box display="flex" justifyContent="flex-end" mt={2} mr={3}>

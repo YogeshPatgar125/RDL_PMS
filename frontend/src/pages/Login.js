@@ -40,24 +40,7 @@ const Login = () => {
         paddingX: { xs: 2, sm: 4, md: 6 },
       }}
     >
-      {/* Header */}
-      <Box
-        sx={{
-          width: "100%",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          backgroundColor: "#3f85f7",
-          padding: "15px 20px",
-          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h6" sx={{ color: "white", fontWeight: "bold" }}>
-          PROJECT MANAGEMENT SYSTEM
-        </Typography>
-      </Box>
+      
 
       <Container
         maxWidth="lg"

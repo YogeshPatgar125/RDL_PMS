@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardContent, Typography, Grid, Box, Divider } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
-import Navbar from '../components/Navbar';
 
 const ProjectDashboard = () => {
   const projectData = [
@@ -33,7 +32,6 @@ const ProjectDashboard = () => {
 
   return (
     <>
-      <Navbar />
       <Box 
         p={3} 
         sx={{ 

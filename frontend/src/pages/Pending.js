@@ -14,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import Navbar from "../components/Navbar";
 
 const allProjects = [
   { id: 1, name: "Website Redesign", leader: "Alice", dueDate: "25 Mar 2025" },
@@ -66,7 +65,6 @@ const PendingPage = () => {
 
   return (
     <div>
-      <Navbar />
 
       {/* Search Bar */}
       <Box display="flex" justifyContent="flex-end" mt={2} mr={3}>

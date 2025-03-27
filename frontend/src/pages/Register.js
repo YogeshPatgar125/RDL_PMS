@@ -70,25 +70,6 @@ const Register = () => {
       overflowY: "auto", // Enable scrolling
     }}
   >
-  
-
-      {/* Header Section */}
-      <Box
-        sx={{
-          width: "100%",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          backgroundColor: "#3f85f7",
-          padding: "15px 20px",
-          boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-          zIndex: 1000,
-        }}
-      >
-        <Typography variant="h6" sx={{ color: "white", fontWeight: "bold", textAlign: "left" }}>
-          PROJECT MANAGEMENT SYSTEM
-        </Typography>
-      </Box>
 
       <Container maxWidth="lg" sx={{ mt: 8 }}>
         <Grid container spacing={3} alignItems="center" justifyContent="center">

@@ -1,6 +1,5 @@
 import React from "react";
 import { Typography, Button, Grid, Card, CardContent, Avatar } from "@mui/material";
-import Navbar from "../components/Navbar";
 
 const teamMembers = [
   { name: "Alice", role: "Web Developer" },
@@ -24,7 +23,6 @@ const teamMembers = [
 const AssigntoLead = () => {
   return (
     <div>
-      <Navbar />
       {/* Team Members Grid */}
       <Grid container spacing={3} sx={{ padding: 5 }}>
         {teamMembers.map((member, index) => (
