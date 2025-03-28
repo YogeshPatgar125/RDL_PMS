@@ -75,14 +75,17 @@ const Navbar = () => {
   return (
     <>
       <AppBar
-        position="static"
+        position="sticky" // Changed from "static" to "sticky"
         sx={{
           background: "linear-gradient(145deg, #69b1ff, #93c5fd)",
           color: "black",
           boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
           borderRadius: "0 0 15px 15px",
+          top: 0, // Ensures it stays at the top
+          zIndex: 1100, // Ensures it appears above other content
         }}
       >
+
         <Toolbar sx={{ display: "flex", alignItems: "center", px: 2 }}>
           {/* Menu Icon for Mobile View */}
           {isMobile && (

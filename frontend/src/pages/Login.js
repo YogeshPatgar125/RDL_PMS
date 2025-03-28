@@ -194,9 +194,15 @@ const Login = () => {
                         ),
                       }}
                     />
-                    <Button fullWidth variant="contained" sx={{ mt: 2, backgroundColor: "#3f85f7" }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 2, backgroundColor: "#3f85f7" }}
+                      onClick={() => navigate("/dashboard")}
+                    >
                       Login
                     </Button>
+
                     <Typography textAlign="center" sx={{ mt: 2 }}>
                       <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
                         <Button
