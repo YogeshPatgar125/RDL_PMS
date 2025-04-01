@@ -17,6 +17,7 @@ import EMDashboard from "./pages/Em_Dashboard";
 import Complete from "./pages/Complete";
 import Addproject from "./pages/Addproject";
 import Assign_Lead from "./pages/Assign_Lead";
+import Emproject from "./pages/emproject";
 
 function App() {
 
@@ -41,6 +42,8 @@ function App() {
         <Route path="/complete" element ={<Complete/>}/>
         <Route path="/addproject" element ={<Addproject/>}/>
         <Route path="/assignlead" element ={<Assign_Lead/>}/>
+        <Route path="/projects" element ={<Emproject/>}/>
+        
       </Routes>
     </Router>
   );

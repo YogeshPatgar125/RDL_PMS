@@ -57,7 +57,7 @@ const Navbar = () => {
     Admin: [
       { label: "Dashboard", path: "/dashboard" },
       { label: "Projects", path: "/addproject" },
-      { label: "Employees", path: "/assign" },
+     // { label: "Employees", path: "/assign" },
     ],
     TeamLead: [
       { label: "Dashboard", path: "/tldashboard" },
