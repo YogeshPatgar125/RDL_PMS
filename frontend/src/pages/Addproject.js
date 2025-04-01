@@ -6,15 +6,60 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Addproject = () => {
-  const [projectName, setProjectName] = useState('');
-  const [description, setDescription] = useState('');
+  const [projectName, setProjectName] = useState(() => localStorage.getItem('projectName') || '');
+  const [description, setDescription] = useState(() => localStorage.getItem('description') || '');
+  
   const navigate = useNavigate();
   const location = useLocation();
 
   // Retrieve assigned team leader from state
   const assignedLead = location.state?.teamLead || null;
 
+  const handleProjectNameChange = (e) => {
+    setProjectName(e.target.value);
+    localStorage.setItem('projectName', e.target.value);
+  };
+  
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+    localStorage.setItem('description', e.target.value);
+  };
+  
+
   // Handle Submit
+  // const handleSubmit = () => {
+  //   if (!projectName || !description || !assignedLead) {
+  //     toast.error("Please fill all fields and assign a team leader !", {
+  //       position: "top-right",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "colored",
+  //     });
+  //     return;
+  //   }
+  //   console.log({
+  //     projectName,
+  //     description,
+  //     teamLeader: assignedLead,
+  //   });
+
+  //   // Show success toast
+  //   toast.success("Notified the team lead!", {
+  //     position: "top-right",
+  //     autoClose: 3000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "colored",
+  //   });
+  // };
+
   const handleSubmit = () => {
     if (!projectName || !description || !assignedLead) {
       toast.error("Please fill all fields and assign a team leader!", {
@@ -29,12 +74,14 @@ const Addproject = () => {
       });
       return;
     }
+  
+    // Log project details (replace this with an API call if needed)
     console.log({
       projectName,
       description,
       teamLeader: assignedLead,
     });
-
+  
     // Show success toast
     toast.success("Notified the team lead!", {
       position: "top-right",
@@ -46,7 +93,18 @@ const Addproject = () => {
       progress: undefined,
       theme: "colored",
     });
+  
+    // Clear localStorage after successful submission
+    localStorage.removeItem('projectName');
+    localStorage.removeItem('description');
+  
+    // Reset state (including team lead)
+    setProjectName('');
+    setDescription('');
+    navigate('/addproject', { state: { teamLead: null } }); // Reset the team leader
   };
+  
+  
 
   return (
     <Box
@@ -72,7 +130,7 @@ const Addproject = () => {
       >
         New Project
       </Typography>
-
+{/*         
       <TextField
         fullWidth
         label="Project Name"
@@ -107,7 +165,50 @@ const Addproject = () => {
             '&.Mui-focused fieldset': { borderColor: '#1976D2' },
           },
         }}
-      />
+      /> */}
+
+<TextField
+  fullWidth
+  label="Project Name"
+  value={projectName}
+  onChange={(e) => {
+    setProjectName(e.target.value);
+    localStorage.setItem('projectName', e.target.value); // Store input value in localStorage
+  }}
+  margin="normal"
+  sx={{
+    backgroundColor: 'white',
+    borderRadius: 2,
+    boxShadow: 1,
+    '& .MuiOutlinedInput-root': {
+      '&:hover fieldset': { borderColor: '#1976D2' },
+      '&.Mui-focused fieldset': { borderColor: '#1976D2' },
+    },
+  }}
+/>
+
+<TextField
+  fullWidth
+  label="Description of Project"
+  multiline
+  rows={4}
+  value={description}
+  onChange={(e) => {
+    setDescription(e.target.value);
+    localStorage.setItem('description', e.target.value); // Store input value in localStorage
+  }}
+  margin="normal"
+  sx={{
+    backgroundColor: 'white',
+    borderRadius: 2,
+    boxShadow: 1,
+    '& .MuiOutlinedInput-root': {
+      '&:hover fieldset': { borderColor: '#1976D2' },
+      '&.Mui-focused fieldset': { borderColor: '#1976D2' },
+    },
+  }}
+/>
+
 
       <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
         <Typography sx={{ mr: 2, color: '#1565C0', fontWeight: 'bold' }}>
