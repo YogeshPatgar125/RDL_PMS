@@ -14,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { registerUser } from "../api/api";
 
 const Register = () => {
   const [employee, setEmployee] = useState({
@@ -26,11 +26,13 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(""); // Store backend error messages
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setEmployee({ ...employee, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // Clear errors when user types
+    setErrors({ ...errors, [e.target.name]: "" });
+    setServerError(""); // Clear server errors on input change
   };
 
   const validateForm = () => {
@@ -49,28 +51,40 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return; // Stop submission if validation fails
+
+    try {
+      const response = await registerUser(employee);
       console.log("Registered:", employee);
-      alert("Registered Successfully!");
+      alert("Registration successful! You can now log in.");
+      
+      // Clear the form after successful registration
       setEmployee({ name: "", email: "", password: "", confirmPassword: "", role: "" });
+      setErrors({});
+      setServerError("");
+
+      // Redirect to login page after successful registration
+      navigate("/");
+    } catch (error) {
+      setServerError(error.response?.data?.message || "Registration failed. Try again.");
     }
   };
 
   return (
     <Box
-    sx={{
-      minHeight: "100vh", // Ensure content can expand
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "flex-start",
-      backgroundColor: "#f4f6f8",
-      paddingTop: "80px",
-      overflowY: "auto", // Enable scrolling
-    }}
-  >
-
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        backgroundColor: "#f4f6f8",
+        paddingTop: "80px",
+        overflowY: "auto",
+      }}
+    >
       <Container maxWidth="lg" sx={{ mt: 8 }}>
         <Grid container spacing={3} alignItems="center" justifyContent="center">
           {/* Left Side - Image */}
@@ -86,6 +100,12 @@ const Register = () => {
           <Grid item xs={12} md={5}>
             <Card elevation={3} sx={{ borderRadius: "10px", p: 3 }}>
               <CardContent>
+                {/* Display server error if any */}
+                {serverError && (
+                  <Typography color="error" textAlign="center">
+                    {serverError}
+                  </Typography>
+                )}
 
                 {/* Name Field */}
                 <TextField
@@ -151,9 +171,9 @@ const Register = () => {
                     variant="outlined"
                   >
                     <MenuItem value="">Select Role</MenuItem>
-                    <MenuItem value="Admin">Admin</MenuItem>
-                    <MenuItem value="Team Lead">Team Lead</MenuItem>
-                    <MenuItem value="Employee">Employee</MenuItem>
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="teamleader">Team Lead</MenuItem>
+                    <MenuItem value="employee">Employee</MenuItem>
                   </Select>
                   {errors.role && (
                     <Typography variant="caption" color="error">
@@ -177,9 +197,9 @@ const Register = () => {
                   <Button
                     sx={{ color: "#3f85f7", textTransform: "none", fontSize: "0.9rem" }}
                     onClick={() => navigate("/")}
-                    >
+                  >
                     Back to Login
-                 </Button>
+                  </Button>
                 </Typography>
               </CardContent>
             </Card>

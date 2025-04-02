@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { loginUser } from "../api/api";  // Importing from api.js
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +26,31 @@ const Login = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    setError(""); // Clear previous errors
+    try {
+        const response = await loginUser({ email, password }); // Using API function
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("role", response.role); // Store the role in localStorage
+
+        // Redirect based on role
+        if (response.role === "admin") {
+            navigate("/addashboard");
+        } else if (response.role === "teamleader") {
+            navigate("/tldashboard");
+        } else if (response.role === "employee") {
+            navigate("/emdashboard");
+        } else {
+            navigate("/"); // Default fallback
+        }
+    } catch (err) {
+        setError(err.message || "Login failed. Please try again.");
+    }
+};
+
 
   return (
     <Box
@@ -40,39 +65,20 @@ const Login = () => {
         paddingX: { xs: 2, sm: 4, md: 6 },
       }}
     >
-      
-
-      <Container
-        maxWidth="lg"
-        sx={{
-          mt: 10,
-          width: { xs: "90%", sm: "80%", md: "100%" },
-        }}
-      >
+      <Container maxWidth="lg" sx={{ mt: 10, width: { xs: "90%", sm: "80%", md: "100%" } }}>
         <Grid container spacing={3} alignItems="center" justifyContent="center">
           {/* Left Side - Image */}
           <Grid item xs={12} md={6} display="flex" justifyContent="center">
             <img
               src="/assets/Login.png"
               alt="Project Management"
-              style={{
-                width: "100%",
-                maxWidth: "500px",
-                height: "auto",
-                borderRadius: "10px",
-              }}
+              style={{ width: "100%", maxWidth: "500px", height: "auto", borderRadius: "10px" }}
             />
           </Grid>
 
           {/* Right Side - Form */}
           <Grid item xs={12} md={5}>
-            <Card
-              elevation={3}
-              sx={{
-                borderRadius: "10px",
-                p: { xs: 2, sm: 3, md: 4 },
-              }}
-            >
+            <Card elevation={3} sx={{ borderRadius: "10px", p: { xs: 2, sm: 3, md: 4 } }}>
               <CardContent>
                 {forgotPassword ? (
                   <>
@@ -194,12 +200,11 @@ const Login = () => {
                         ),
                       }}
                     />
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      sx={{ mt: 2, backgroundColor: "#3f85f7" }}
-                      onClick={() => navigate("/dashboard")}
-                    >
+
+                    {/* Show error message if login fails */}
+                    {error && <Typography color="error" sx={{ mt: 1 }}>{error}</Typography>}
+
+                    <Button fullWidth variant="contained" sx={{ mt: 2, backgroundColor: "#3f85f7" }} onClick={handleLogin}>
                       Login
                     </Button>
 
