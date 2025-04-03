@@ -1,7 +1,8 @@
-// routes/employeeRoutes.js
 const express = require('express');
 const { getEmployees } = require('../controllers/employeeController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { verifyAdmin } = require('../middlewares/authMiddleware');
 const router = express.Router();
-router.get('/', authMiddleware, getEmployees);
+
+router.get('/', verifyAdmin, getEmployees); // Only admin can access this
+
 module.exports = router;

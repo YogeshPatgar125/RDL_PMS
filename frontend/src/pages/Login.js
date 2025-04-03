@@ -32,24 +32,26 @@ const Login = () => {
   const handleLogin = async () => {
     setError(""); // Clear previous errors
     try {
-        const response = await loginUser({ email, password }); // Using API function
+        const response = await loginUser({ email, password }); // Call API
+
         localStorage.setItem("token", response.token);
-        localStorage.setItem("role", response.role); // Store the role in localStorage
+        localStorage.setItem("role", response.role); // Store role
 
         // Redirect based on role
         if (response.role === "admin") {
             navigate("/addashboard");
         } else if (response.role === "teamleader") {
             navigate("/tldashboard");
-        } else if (response.role === "employee") {
+        } else if (response.role.startsWith("employee")) {  // Check for any employee role
             navigate("/emdashboard");
         } else {
             navigate("/"); // Default fallback
         }
     } catch (err) {
-        setError(err.message || "Login failed. Please try again.");
+        setError(err.response?.data?.message || "Login failed. Please try again.");
     }
 };
+
 
 
   return (

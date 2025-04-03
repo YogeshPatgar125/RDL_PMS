@@ -90,18 +90,35 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
-        <Route path="/dashboard" element={<ProtectedRoute>
-          {localStorage.getItem("role") === "admin" ? <Navigate to="/addashboard" /> :
-           localStorage.getItem("role") === "teamleader" ? <Navigate to="/tldashboard" /> :
-           localStorage.getItem("role") === "employee" ? <Navigate to="/emdashboard" /> :
-           <Navigate to="/" />}
-        </ProtectedRoute>} />
 
+        {/* Unified Role-Based Redirection */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              {localStorage.getItem("role") === "admin" ? (
+                <Navigate to="/addashboard" />
+              ) : localStorage.getItem("role") === "teamleader" ? (
+                <Navigate to="/tldashboard" />
+              ) : localStorage.getItem("role") === "employee" ? (
+                <Navigate to="/emdashboard" />
+              ) : (
+                <Navigate to="/" />
+              )}
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Dashboard */}
         <Route path="/addashboard" element={<ProtectedRoute roleRequired="admin"><ADDashboard /></ProtectedRoute>} />
+
+        {/* Team Leader Dashboard */}
         <Route path="/tldashboard" element={<ProtectedRoute roleRequired="teamleader"><TLDashboard /></ProtectedRoute>} />
+
+        {/* Employee Dashboard (Handles all specific roles) */}
         <Route path="/emdashboard" element={<ProtectedRoute roleRequired="employee"><EMDashboard /></ProtectedRoute>} />
 
+        {/* General Protected Routes */}
         <Route path="/employees" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute><Report /></ProtectedRoute>} />
         <Route path="/assign" element={<ProtectedRoute><Assign /></ProtectedRoute>} />

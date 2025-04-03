@@ -260,14 +260,20 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reportAnchor, setReportAnchor] = useState(null);
   const [userRole, setUserRole] = useState("");
+  const [specificRole, setSpecificRole] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
+    const specific = localStorage.getItem("specificRole"); // Fetch specificRole
+
     if (token && role) {
       setIsLoggedIn(true);
       setUserRole(role);
+      if (role === "employee" && specific) {
+        setSpecificRole(specific);
+      }
     } else {
       setIsLoggedIn(false);
     }
@@ -276,6 +282,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("specificRole");
     setIsLoggedIn(false);
     navigate("/");
   };
@@ -365,7 +372,9 @@ const Navbar = () => {
 
       <Drawer anchor="left" open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         <Box sx={{ width: 250, padding: 2 }}>
-          <Typography sx={{ fontWeight: "bold" }}>{userRole} Dashboard</Typography>
+          <Typography sx={{ fontWeight: "bold" }}>
+            {userRole === "employee" ? specificRole : userRole} Dashboard
+          </Typography>
           <List>
             {navLinks[userRole]?.map((nav) => (
               <ListItem button component={Link} to={nav.path} key={nav.label} onClick={() => setSidebarOpen(false)}>
