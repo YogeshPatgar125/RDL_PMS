@@ -87,14 +87,6 @@ const Register = () => {
     >
       <Container maxWidth="lg" sx={{ mt: 8 }}>
         <Grid container spacing={3} alignItems="center" justifyContent="center">
-          {/* Left Side - Image */}
-          <Grid item xs={12} md={6} display="flex" justifyContent="center">
-            <img
-              src="/assets/Login.png"
-              alt="Project Management"
-              style={{ width: "100%", maxWidth: "950px", borderRadius: "10px" }}
-            />
-          </Grid>
 
           {/* Right Side - Employee Form */}
           <Grid item xs={12} md={5}>
@@ -110,7 +102,7 @@ const Register = () => {
                 {/* Name Field */}
                 <TextField
                   fullWidth
-                  label="Enter Your Name"
+                  label="Enter Employee Name"
                   name="name"
                   value={employee.name}
                   onChange={handleChange}
@@ -123,7 +115,7 @@ const Register = () => {
                 {/* Email Field */}
                 <TextField
                   fullWidth
-                  label="Enter Your Email"
+                  label="Enter Employee Email"
                   name="email"
                   value={employee.email}
                   onChange={handleChange}
@@ -137,7 +129,7 @@ const Register = () => {
                 <TextField
                   fullWidth
                   type="password"
-                  label="Enter Your Password"
+                  label="Enter Password"
                   name="password"
                   value={employee.password}
                   onChange={handleChange}
@@ -151,7 +143,7 @@ const Register = () => {
                 <TextField
                   fullWidth
                   type="password"
-                  label="Confirm Your Password"
+                  label="Confirm Password"
                   name="confirmPassword"
                   value={employee.confirmPassword}
                   onChange={handleChange}
@@ -171,9 +163,11 @@ const Register = () => {
                     variant="outlined"
                   >
                     <MenuItem value="">Select Role</MenuItem>
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="teamleader">Team Lead</MenuItem>
-                    <MenuItem value="employee">Employee</MenuItem>
+                    <MenuItem value="Web Developer">Web Developer</MenuItem>
+                    <MenuItem value="App Developer">App Developer</MenuItem>
+                    <MenuItem value="Cloud Engineer">Cloud Engineer</MenuItem>
+                    <MenuItem value="DevOps">DevOps</MenuItem>
+                    <MenuItem value="Tester">Tester</MenuItem>
                   </Select>
                   {errors.role && (
                     <Typography variant="caption" color="error">
@@ -192,15 +186,6 @@ const Register = () => {
                   Register
                 </Button>
 
-                {/* Back to Login Button */}
-                <Typography textAlign="center" sx={{ mt: 2 }}>
-                  <Button
-                    sx={{ color: "#3f85f7", textTransform: "none", fontSize: "0.9rem" }}
-                    onClick={() => navigate("/")}
-                  >
-                    Back to Login
-                  </Button>
-                </Typography>
               </CardContent>
             </Card>
           </Grid>

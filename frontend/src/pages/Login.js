@@ -210,12 +210,6 @@ const Login = () => {
 
                     <Typography textAlign="center" sx={{ mt: 2 }}>
                       <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-                        <Button
-                          sx={{ color: "#3f85f7", textTransform: "none", fontSize: "0.9rem" }}
-                          onClick={() => navigate("/register")}
-                        >
-                          New Register?
-                        </Button>
 
                         <Button
                           sx={{ color: "#3f85f7", textTransform: "none", fontSize: "0.9rem" }}
