@@ -5,4 +5,5 @@ const router = express.Router();
 
 router.get('/', verifyAdmin, getEmployees); // Only admin can access this
 
+
 module.exports = router;

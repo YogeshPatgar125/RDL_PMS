@@ -1,10 +1,27 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/auth"; // Backend URL
+const PROJECT_API_URL = "http://localhost:5000/api/projects"; // Employee API
 
 // Function to get the auth token from local storage
 const getAuthToken = () => {
   return localStorage.getItem("token"); // Assuming token is stored in localStorage
+};
+
+// Fetch Team Leaders
+export const getTeamLeader = async () => {
+  try {
+    const token = getAuthToken();
+    if (!token) throw { message: "Unauthorized: No token provided" };
+
+    const response = await axios.get(`${PROJECT_API_URL}/teamLeader`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to fetch team leaders" };
+  }
 };
 
 export const addUser = async (userData) => {
