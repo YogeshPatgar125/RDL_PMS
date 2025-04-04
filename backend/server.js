@@ -4,6 +4,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+
 const { initializeAdmin } = require('./controllers/authController'); // Import function
 require('dotenv').config();
 
