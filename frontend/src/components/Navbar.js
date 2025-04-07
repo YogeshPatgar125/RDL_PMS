@@ -231,6 +231,7 @@
 // export default Navbar;
 
 
+// Navbar.js
 import React, { useState, useEffect } from "react";
 import {
   AppBar,
@@ -246,27 +247,33 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Badge,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { getNotifications } from "../api/api";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 768px)");
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reportAnchor, setReportAnchor] = useState(null);
   const [userRole, setUserRole] = useState("");
   const [specificRole, setSpecificRole] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-    const specific = localStorage.getItem("specificRole"); // Fetch specificRole
+    const specific = localStorage.getItem("specificRole");
 
     if (token && role) {
       setIsLoggedIn(true);
@@ -279,21 +286,37 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (userId) {
+      fetchNotifications();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (location.pathname === "/notifications") {
+      fetchNotifications();
+    }
+  }, [location.pathname]);
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await getNotifications(userId);
+      setNotifications(data.notifications || []);
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+    }
+  };
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("specificRole");
+    localStorage.clear();
     setIsLoggedIn(false);
     navigate("/");
   };
 
-  const handleReportClick = (event) => {
-    setReportAnchor(event.currentTarget);
-  };
-
-  const handleReportClose = () => {
-    setReportAnchor(null);
-  };
+  const handleReportClick = (event) => setReportAnchor(event.currentTarget);
+  const handleReportClose = () => setReportAnchor(null);
 
   const navLinks = {
     admin: [
@@ -303,7 +326,7 @@ const Navbar = () => {
     ],
     teamleader: [
       { label: "Dashboard", path: "/tldashboard" },
-      { label: "Team Projects", path: "/team-projects" },
+      { label: "Team Projects", path: "/team-projects" }, // Make sure these pages exist
       { label: "Team Members", path: "/team-members" },
     ],
     employee: [
@@ -316,21 +339,35 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="sticky" sx={{ background: "linear-gradient(145deg, #69b1ff, #93c5fd)", color: "black" }}>
+      <AppBar
+        position="sticky"
+        sx={{
+          background: "linear-gradient(145deg, #69b1ff, #93c5fd)",
+          color: "black",
+        }}
+      >
         <Toolbar sx={{ display: "flex", alignItems: "center", px: 2 }}>
           {isMobile && (
-            <IconButton edge="start" color="inherit" onClick={() => setSidebarOpen(true)} sx={{ mr: 2 }}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => setSidebarOpen(true)}
+              sx={{ mr: 2 }}
+            >
               <MenuIcon />
             </IconButton>
           )}
 
           {!isMobile && (
-            <Typography variant="h5" sx={{ fontWeight: "bold", color: "white" }}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "bold", color: "white" }}
+            >
               PROJECT MANAGEMENT SYSTEM
             </Typography>
           )}
 
-          {!isMobile && isLoggedIn && (
+          {!isMobile && isLoggedIn && userRole && (
             <Box sx={{ display: "flex", gap: 3, marginLeft: "auto" }}>
               {navLinks[userRole]?.map((nav) => (
                 <Button
@@ -344,25 +381,60 @@ const Navbar = () => {
               ))}
 
               {(userRole === "admin" || userRole === "teamleader") && (
-                <Button onClick={handleReportClick} sx={{ color: "#ffffffcc" }} endIcon={<ArrowDropDownIcon />}>
+                <Button
+                  onClick={handleReportClick}
+                  sx={{ color: "#ffffffcc" }}
+                  endIcon={<ArrowDropDownIcon />}
+                >
                   Reports
                 </Button>
               )}
 
-              <Menu anchorEl={reportAnchor} open={Boolean(reportAnchor)} onClose={handleReportClose}>
-                <MenuItem onClick={() => { navigate("/complete"); handleReportClose(); }}>Complete</MenuItem>
-                <MenuItem onClick={() => { navigate("/pending"); handleReportClose(); }}>Pending</MenuItem>
-                <MenuItem onClick={() => { navigate("/cancel"); handleReportClose(); }}>Cancel</MenuItem>
+              <Menu
+                anchorEl={reportAnchor}
+                open={Boolean(reportAnchor)}
+                onClose={handleReportClose}
+              >
+                <MenuItem
+                  onClick={() => {
+                    navigate("/complete");
+                    handleReportClose();
+                  }}
+                >
+                  Complete
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/pending");
+                    handleReportClose();
+                  }}
+                >
+                  Pending
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/cancel");
+                    handleReportClose();
+                  }}
+                >
+                  Cancel
+                </MenuItem>
               </Menu>
             </Box>
           )}
 
           {isLoggedIn && (
             <>
-              <IconButton sx={{ color: "white", marginLeft: "20px" }}>
-                <NotificationsIcon />
+              <IconButton
+                sx={{ color: "white", ml: 2 }}
+                onClick={() => navigate("/notifications")}
+              >
+                <Badge badgeContent={unreadCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
               </IconButton>
-              <IconButton onClick={handleLogout} sx={{ color: "white", marginLeft: "20px" }}>
+
+              <IconButton onClick={handleLogout} sx={{ color: "white", ml: 2 }}>
                 <LogoutIcon />
               </IconButton>
             </>
@@ -370,14 +442,24 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="left" open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
+      <Drawer
+        anchor="left"
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      >
         <Box sx={{ width: 250, padding: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>
             {userRole === "employee" ? specificRole : userRole} Dashboard
           </Typography>
           <List>
             {navLinks[userRole]?.map((nav) => (
-              <ListItem button component={Link} to={nav.path} key={nav.label} onClick={() => setSidebarOpen(false)}>
+              <ListItem
+                button
+                component={Link}
+                to={nav.path}
+                key={nav.label}
+                onClick={() => setSidebarOpen(false)}
+              >
                 <ListItemText primary={nav.label} />
               </ListItem>
             ))}

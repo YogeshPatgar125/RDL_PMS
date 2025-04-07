@@ -36,13 +36,20 @@ const Login = () => {
 
         localStorage.setItem("token", response.token);
         localStorage.setItem("role", response.role); // Store role
+        localStorage.setItem("userId", response.userId);
+          // ✅ Store specificRole only if role is employee
+    if (response.role === "employee" && response.specificRole) {
+      localStorage.setItem("specificRole", response.specificRole);
+    } else {
+      localStorage.removeItem("specificRole");
+    }
 
         // Redirect based on role
         if (response.role === "admin") {
             navigate("/addashboard");
         } else if (response.role === "teamleader") {
             navigate("/tldashboard");
-        } else if (response.role.startsWith("employee")) {  // Check for any employee role
+        } else if (response.role === "employee") {  // Check for any employee role
             navigate("/emdashboard");
         } else {
             navigate("/"); // Default fallback

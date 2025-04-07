@@ -143,6 +143,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
+
+// Pages & Components
 import Login from "./pages/Login";
 import ADDashboard from "./pages/Ad_Dashboard";
 import Navbar from "./components/Navbar";
@@ -160,24 +162,35 @@ import Complete from "./pages/Complete";
 import Addproject from "./pages/Addproject";
 import Assign_Lead from "./pages/Assign_Lead";
 import Emproject from "./pages/emproject";
+import NotificationsPage from "./pages/notification";
+import AssignEmployees from "./pages/AssignEmployee";
+import AssignEmployeesList from "./pages/AssignEmployeeList";
+import ProjectDetails from "./pages/ProjectDetails";
 
+// Route Protection Component
 const ProtectedRoute = ({ children, roleRequired }) => {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
+  const specificRole = localStorage.getItem("specificRole");
 
   if (!token) return <Navigate to="/" />;
-  
-  // Allow Employees with specific roles
-  if (roleRequired === "employee" && !["Web Developer", "App Developer", "Cloud Engineer", "DevOps", "Tester"].includes(role)) {
+
+  if (
+    roleRequired === "employee" &&
+    role === "employee" &&
+    !["Web Developer", "App Developer", "Cloud Engineer", "DevOps", "Tester"].includes(specificRole)
+  ) {
     return <Navigate to="/" />;
   }
 
   if (roleRequired && role !== roleRequired) return <Navigate to="/" />;
+
   return children;
 };
 
 function App() {
-  const userRole = localStorage.getItem("role"); // Store role in a variable
+  const role = localStorage.getItem("role");
+  const specificRole = localStorage.getItem("specificRole");
 
   return (
     <Router>
@@ -186,16 +199,16 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Role-Based Dashboard Redirection */}
+        {/* Dashboard Redirect Based on Role */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              {userRole === "admin" ? (
+              {role === "admin" ? (
                 <Navigate to="/addashboard" />
-              ) : userRole === "teamleader" ? (
+              ) : role === "teamleader" ? (
                 <Navigate to="/tldashboard" />
-              ) : ["Web Developer", "App Developer", "Cloud Engineer", "DevOps", "Tester"].includes(userRole) ? (
+              ) : role === "employee" && ["Web Developer", "App Developer", "Cloud Engineer", "DevOps", "Tester"].includes(specificRole) ? (
                 <Navigate to="/emdashboard" />
               ) : (
                 <Navigate to="/" />
@@ -204,16 +217,20 @@ function App() {
           }
         />
 
-        {/* Admin Dashboard */}
+        {/* Admin Routes */}
         <Route path="/addashboard" element={<ProtectedRoute roleRequired="admin"><ADDashboard /></ProtectedRoute>} />
+        <Route path="/addproject" element={<ProtectedRoute roleRequired="admin"><Addproject /></ProtectedRoute>} />
+        <Route path="/assignlead" element={<ProtectedRoute roleRequired="admin"><Assign_Lead /></ProtectedRoute>} />
 
-        {/* Team Leader Dashboard */}
+        {/* Team Leader Routes */}
         <Route path="/tldashboard" element={<ProtectedRoute roleRequired="teamleader"><TLDashboard /></ProtectedRoute>} />
+        <Route path="/assign-employees/:projectId" element={<ProtectedRoute roleRequired="teamleader"><AssignEmployees /></ProtectedRoute>} />
+        <Route path="/assignemployees" element={<ProtectedRoute roleRequired="teamleader"><AssignEmployeesList/></ProtectedRoute>} />
 
-        {/* Employee Dashboard (Handles all specific roles) */}
+        {/* Employee Routes */}
         <Route path="/emdashboard" element={<ProtectedRoute roleRequired="employee"><EMDashboard /></ProtectedRoute>} />
 
-        {/* General Protected Routes */}
+        {/* Common Routes */}
         <Route path="/employees" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute><Report /></ProtectedRoute>} />
         <Route path="/assign" element={<ProtectedRoute><Assign /></ProtectedRoute>} />
@@ -222,9 +239,9 @@ function App() {
         <Route path="/complaint" element={<ProtectedRoute><ReportIssueTable /></ProtectedRoute>} />
         <Route path="/update" element={<ProtectedRoute><DailyUpdateForm /></ProtectedRoute>} />
         <Route path="/complete" element={<ProtectedRoute><Complete /></ProtectedRoute>} />
-        <Route path="/addproject" element={<ProtectedRoute><Addproject /></ProtectedRoute>} />
-        <Route path="/assignlead" element={<ProtectedRoute><Assign_Lead /></ProtectedRoute>} />
         <Route path="/projects" element={<ProtectedRoute><Emproject /></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+        <Route path="/projectdetails/:projectId" element={<ProtectedRoute><ProjectDetails/></ProtectedRoute>} />
       </Routes>
     </Router>
   );

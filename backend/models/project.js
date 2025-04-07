@@ -1,12 +1,20 @@
+// models/project.js
 const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema({
   projectName: { type: String, required: true },
   description: { type: String, required: true },
   teamLeader: {
-    name: { type: String, required: true },
-    role: { type: String, required: true },
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    name: String,
+    role: String,
   },
+  employees: [
+    {  type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  ],
+  assignedEmployees: [
+    { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

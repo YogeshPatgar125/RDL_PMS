@@ -89,23 +89,36 @@ exports.addUser = async (req, res) => {
 // Normal User Login
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-
+  
     try {
-        const user = await User.findOne({ email });
-
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        // Generate JWT token
-        const token = jwt.sign(
-            { id: user._id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.json({ token, role: user.role });
+      const user = await User.findOne({ email });
+  
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+  
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user._id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+  
+      // Build the base response
+      const responsePayload = {
+        token,
+        role: user.role,
+        userId: user._id,
+      };
+  
+      // Include specificRole only for employee
+      if (user.role === 'employee') {
+        responsePayload.specificRole = user.specificRole;
+      }
+  
+      res.json(responsePayload);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-};
+  };
+  
