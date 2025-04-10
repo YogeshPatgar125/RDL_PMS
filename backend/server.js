@@ -26,6 +26,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/tasks', require('./routes/tasks'));
 
 
 app.listen(process.env.PORT, () => {
