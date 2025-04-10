@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Paper } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MyTask = () => {
   const [formData, setFormData] = useState({
@@ -13,9 +15,38 @@ const MyTask = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
+
+    const { teamLeader, employee, taskName, taskDetails } = formData;
+    if (!teamLeader || !employee || !taskName || !taskDetails) {
+      toast.error("Please fill all fields!", { position: "top-right" });
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        toast.success("Task submitted successfully!", { position: "top-right" });
+        setFormData({
+          teamLeader: "",
+          employee: "",
+          taskName: "",
+          taskDetails: "",
+        });
+      } else {
+        toast.error(`Error: ${result.error}`, { position: "top-right" });
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      toast.error("Something went wrong!", { position: "top-right" });
+    }
   };
 
   return (
@@ -28,6 +59,7 @@ const MyTask = () => {
         backgroundColor: "#f0f4f8",
       }}
     >
+      <ToastContainer />
       <Paper
         elevation={6}
         sx={{
