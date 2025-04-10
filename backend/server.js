@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const complaintRoutes = require("./routes/complaintRoutes");
 
 const { initializeAdmin } = require('./controllers/authController'); // Import function
 require('dotenv').config();
@@ -27,6 +28,7 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/tasks', require('./routes/tasks'));
+app.use("/api/complaints", complaintRoutes);
 
 
 app.listen(process.env.PORT, () => {
