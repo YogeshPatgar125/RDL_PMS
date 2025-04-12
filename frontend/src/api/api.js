@@ -87,15 +87,34 @@ export const getNotifications = async (userId) => {
   }
 };
 
-// 5. Mark All Notifications as Read
-export const handleMarkAsRead = async (userId) => {
+// // 5. Mark All Notifications as Read
+// export const handleMarkAsRead = async (userId) => {
+//   try {
+//     const token = getAuthToken();
+//     if (!token) throw { message: "Unauthorized: No token provided" };
+
+//     const response = await axios.post(
+//       `${NOTIFICATION_API_URL}/mark-read`,
+//       { userId },
+//       {
+//         headers: { Authorization: `Bearer ${token}` },
+//       }
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     throw error.response?.data || { message: "Failed to mark notifications as read" };
+//   }
+// };
+
+export const handleMarkAsRead = async (notificationId) => {
   try {
     const token = getAuthToken();
     if (!token) throw { message: "Unauthorized: No token provided" };
 
     const response = await axios.post(
       `${NOTIFICATION_API_URL}/mark-read`,
-      { userId },
+      { notificationId },
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -103,9 +122,10 @@ export const handleMarkAsRead = async (userId) => {
 
     return response.data;
   } catch (error) {
-    throw error.response?.data || { message: "Failed to mark notifications as read" };
+    throw error.response?.data || { message: "Failed to mark notification as read" };
   }
 };
+
 
 
 
@@ -162,5 +182,22 @@ export const getAllEmployee = async () => {
     return response.data;
   } catch (error) {
     throw error.response?.data || { message: "Failed to fetch employee" };
+  }
+};
+
+
+// 8. Fetch Projects Assigned to an Employee
+export const getAssignedProjects = async (employeeId) => {
+  try {
+    const token = getAuthToken();
+    if (!token) throw new Error("Unauthorized: No token provided");
+
+    const response = await axios.get(`${PROJECT_API_URL}/employee/projects/${employeeId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to fetch assigned projects" };
   }
 };

@@ -5,6 +5,7 @@ const {
   getProjects,
   getAllEmployee,
   getProjectById,
+  getProjectsByEmployee,
 } = require('../controllers/projectController');
 const { assignEmployeesToProject } = require('../controllers/teamleaderController');
 
@@ -17,5 +18,6 @@ router.post('/', createProject);
 router.get('/', getProjects);
 router.put('/assign-employees/:projectId', assignEmployeesToProject);
 router.get('/:projectId', getProjectById); // Keep dynamic routes last
+router.get('/employee/projects/:employeeId', getProjectsByEmployee);
 
 module.exports = router;

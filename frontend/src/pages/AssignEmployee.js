@@ -13,7 +13,7 @@ const AssignEmployees = () => {
   const [description, setDescription] = useState('');
   const [selectedEmployees, setSelectedEmployees] = useState([]);
 
-  // 👇 If coming back from employee selection page, set selectedEmployees
+  // Set selectedEmployees when coming from employee selection
   useEffect(() => {
     if (location.state?.selectedEmployees) {
       setSelectedEmployees(location.state.selectedEmployees);
@@ -22,7 +22,6 @@ const AssignEmployees = () => {
 
   useEffect(() => {
     const fetchProject = async () => {
-      console.log("Project ID:", projectId);
       try {
         const response = await fetch(`http://localhost:5000/api/projects/${projectId}`);
         const data = await response.json();
@@ -45,7 +44,6 @@ const AssignEmployees = () => {
     navigate('/assignemployees', {
       state: {
         projectId,
-        // Navigate and pass selectedEmployees along
         selectedEmployees
       },
     });
@@ -56,19 +54,24 @@ const AssignEmployees = () => {
       toast.error("Please assign at least one employee.");
       return;
     }
-  
+
     try {
       const res = await fetch(`http://localhost:5000/api/projects/assign-employees/${projectId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          employeeIds: selectedEmployees.map(e => e._id), // ✅ match backend field name
+          employeeIds: selectedEmployees.map(e => e._id),
         }),
       });
-  
+
       if (res.ok) {
         toast.success("Employees assigned successfully!");
         setSelectedEmployees([]);
+
+        // ✅ Navigate to dashboard after a short delay to show toast
+        setTimeout(() => {
+          navigate('/tldashboard');
+        }, 2000);
       } else {
         toast.error("Failed to assign employees");
       }
@@ -77,7 +80,7 @@ const AssignEmployees = () => {
       toast.error("Something went wrong");
     }
   };
-  
+
   return (
     <Box sx={{ maxWidth: 600, mx: 'auto', mt: 5, p: 3, borderRadius: 4, boxShadow: 5, backgroundColor: '#f8faff' }}>
       <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1976D2' }}>
@@ -139,3 +142,4 @@ const AssignEmployees = () => {
 };
 
 export default AssignEmployees;
+

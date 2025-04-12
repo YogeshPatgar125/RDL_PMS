@@ -287,7 +287,6 @@ const Addproject = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Retrieve assigned team leader from state
   const assignedLead = location.state?.teamLead || null;
 
   const handleProjectNameChange = (e) => {
@@ -312,7 +311,7 @@ const Addproject = () => {
         progress: undefined,
         theme: "colored",
       });
-      return;
+      return; // Stop execution
     }
 
     const projectData = {
@@ -331,7 +330,7 @@ const Addproject = () => {
       if (response.ok) {
         toast.success("Notified the team lead!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -340,20 +339,19 @@ const Addproject = () => {
           theme: "colored",
         });
 
-        // Clear only input fields, keep assignedLead
         localStorage.removeItem('projectName');
         localStorage.removeItem('description');
         setProjectName('');
         setDescription('');
+
+        // Delay navigation so toast can show
+        setTimeout(() => {
+          navigate('/addashboard');
+        }, 2000);
       } else {
         toast.error("Failed to send project details!", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
           theme: "colored",
         });
       }
@@ -362,11 +360,6 @@ const Addproject = () => {
       toast.error("An error occurred!", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         theme: "colored",
       });
     }
@@ -494,4 +487,3 @@ const Addproject = () => {
 };
 
 export default Addproject;
-

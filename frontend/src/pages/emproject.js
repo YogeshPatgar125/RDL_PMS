@@ -1,21 +1,32 @@
-import React, { useState } from "react";
-import { Box, Card, CardContent, Typography, Button, Grid, Collapse } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Card, CardContent, Typography, Button, Grid } from "@mui/material";
 import { motion } from "framer-motion";
-
-const projects = [
-  { id: 1, name: "Inventory Management System", description: "A system to track inventory levels, orders, and sales in real-time." },
-  { id: 2, name: "Employee Attendance Tracker", description: "A web-based application to monitor employee attendance efficiently." },
-  { id: 3, name: "Customer Feedback Portal", description: "A platform for collecting and analyzing customer feedback for business improvement." },
-  { id: 4, name: "Task Automation Tool", description: "An AI-driven tool to automate repetitive tasks and improve productivity." },
-  { id: 5, name: "HR Management System", description: "A system to manage employee records, payroll, and leave tracking." },
-  { id: 6, name: "E-Commerce Analytics", description: "A dashboard that provides insights into sales trends and customer behavior." },
-];
+import { useNavigate } from "react-router-dom"; // Import useNavigate for React Router
+import { getAssignedProjects } from "../api/api"; // Assume this is a new API function we'll create
 
 const EmProject = () => {
-  const [expanded, setExpanded] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const navigate = useNavigate(); // Initialize navigate for routing
 
-  const handleExpandClick = (id) => {
-    setExpanded(expanded === id ? null : id);
+  // Fetch assigned projects for the employee
+  useEffect(() => {
+    const fetchAssignedProjects = async () => {
+      try {
+        const employeeId = localStorage.getItem("userId"); // Assume employee's userId is stored in localStorage
+        const fetchedProjects = await getAssignedProjects(employeeId);
+        console.log(fetchedProjects); // Check the data structure
+        setProjects(fetchedProjects); // Assuming fetchedProjects is an array of project objects
+      } catch (error) {
+        console.error("Error fetching assigned projects:", error);
+      }
+    };
+
+    fetchAssignedProjects();
+  }, []);
+
+  const handleViewDetailsClick = (projectId) => {
+    // Use navigate from React Router to navigate to the project details page
+    navigate(`/projectdetails/${projectId}`);
   };
 
   return (
@@ -48,7 +59,7 @@ const EmProject = () => {
 
       <Grid container spacing={3} justifyContent="center" sx={{ width: "80%" }}>
         {projects.map((project) => (
-          <Grid item xs={12} sm={6} md={4} key={project.id}>
+          <Grid item xs={12} sm={6} md={4} key={project._id}> {/* Use _id as the unique key */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.3 }}>
               <Card
                 sx={{
@@ -66,7 +77,7 @@ const EmProject = () => {
               >
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" textAlign="center" color="#0D47A1">
-                    {project.name}
+                    {project.projectName} {/* Ensure projectName exists in your data */}
                   </Typography>
                   <Button
                     variant="contained"
@@ -82,33 +93,10 @@ const EmProject = () => {
                       },
                     }}
                     fullWidth
-                    onClick={() => handleExpandClick(project.id)}
+                    onClick={() => handleViewDetailsClick(project._id)} 
                   >
-                    {expanded === project.id ? "Hide Details" : "View Details"}
+                    View Details
                   </Button>
-
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: expanded === project.id ? 1 : 0, height: expanded === project.id ? "auto" : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Collapse in={expanded === project.id} timeout="auto" unmountOnExit>
-                      <Typography
-                        variant="body2"
-                        mt={2}
-                        sx={{
-                          opacity: 0.9,
-                          backgroundColor: "rgba(255, 255, 255, 0.5)",
-                          padding: "10px",
-                          borderRadius: "10px",
-                          textAlign: "center",
-                          color: "#0D47A1",
-                        }}
-                      >
-                        {project.description}
-                      </Typography>
-                    </Collapse>
-                  </motion.div>
                 </CardContent>
               </Card>
             </motion.div>

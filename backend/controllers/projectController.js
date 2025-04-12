@@ -87,3 +87,37 @@ exports.getProjectById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.getProjectsByEmployee = async (req, res) => {
+  try {
+    const { employeeId } = req.params; // Extract the employee ID from the request parameters
+
+    console.log('Employee ID:', employeeId); // Log employeeId for debugging purposes
+
+    // Check if employeeId is valid (e.g., not empty, and ensure it's an ObjectId if you're using MongoDB)
+    if (!employeeId || !/^[0-9a-fA-F]{24}$/.test(employeeId)) {
+      return res.status(400).json({ message: 'Invalid employee ID' });
+    }
+
+    // Fetch projects that are assigned to the employee
+    const projects = await Project.find({ assignedEmployees: employeeId }).lean(); // Use `.lean()` for a plain JS object response
+
+    console.log('Fetched Projects:', projects); // Log fetched projects for debugging
+
+    // If no projects are found, return a 404 status with a message
+    if (!projects || projects.length === 0) {
+      return res.status(404).json({ message: 'No projects found for this employee' });
+    }
+
+    // Return the fetched projects with a 200 OK response
+    return res.status(200).json(projects);
+
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error fetching projects:', error);
+
+    // Return a 500 status with an error message if there was a server issue
+    return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
