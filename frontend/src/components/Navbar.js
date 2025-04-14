@@ -327,7 +327,7 @@ const Navbar = () => {
     teamleader: [
       { label: "Dashboard", path: "/tldashboard" },
       { label: "Team Projects", path: "/team-projects" }, // Make sure these pages exist
-      { label: "Team Members", path: "/team-members" },
+      { label: "Daily Update", path: "/teamleadtasks" },
     ],
     employee: [
       { label: "Dashboard", path: "/emdashboard" },
