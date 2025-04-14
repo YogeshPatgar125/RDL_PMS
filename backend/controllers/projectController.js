@@ -122,7 +122,7 @@
 //   }
 // };
 
-const mongoose = require("mongoose"); // ✅ Needed for ObjectId validation
+const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const Project = require("../models/project");
 const Notification = require("../models/notification");
@@ -152,22 +152,19 @@ exports.createProject = async (req, res) => {
   try {
     const { projectName, description, dueDate, teamLeader } = req.body;
 
-    // Basic validation
     if (!projectName || !description || !dueDate || !teamLeader) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Create and save project
     const newProject = new Project({
       projectName,
       description,
-      dueDate: new Date(dueDate),
+      dueDate, // ⬅️ No conversion to Date object
       teamLeader,
     });
 
     const savedProject = await newProject.save();
 
-    // Create a notification for the team leader
     await Notification.create({
       userId: teamLeader._id || teamLeader,
       message: `You have been assigned a new project: ${projectName}`,
@@ -236,3 +233,4 @@ exports.getProjectsByEmployee = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+

@@ -531,35 +531,39 @@ const Addproject = () => {
       });
       return;
     }
-
+  
+    // Convert YYYY-MM-DD to DD-MM-YYYY
+    const [year, month, day] = dueDate.split('-');
+    const formattedDate = `${day}-${month}-${year}`;
+  
     const projectData = {
       projectName,
       description,
-      dueDate,
+      dueDate: formattedDate,
       teamLeader: assignedLead,
     };
-
+  
     try {
       const response = await fetch('http://localhost:5000/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(projectData),
       });
-
+  
       if (response.ok) {
         toast.success("Notified the team lead!", {
           position: "top-right",
           autoClose: 2000,
           theme: "colored",
         });
-
+  
         localStorage.removeItem('projectName');
         localStorage.removeItem('description');
         localStorage.removeItem('dueDate');
         setProjectName('');
         setDescription('');
         setDueDate('');
-
+  
         setTimeout(() => {
           navigate('/addashboard');
         }, 2000);
@@ -579,6 +583,7 @@ const Addproject = () => {
       });
     }
   };
+  
 
   return (
     <Box sx={{

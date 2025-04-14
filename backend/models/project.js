@@ -26,7 +26,7 @@ const mongoose = require('mongoose');
 const projectSchema = new mongoose.Schema({
   projectName: { type: String, required: true },
   description: { type: String, required: true },
-  dueDate: { type: Date, required: true }, // ✅ Added
+  dueDate: { type: String, required: true }, // Date stored as "DD-MM-YYYY"
   teamLeader: {
     _id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     name: String,
