@@ -6,6 +6,8 @@ const employeeRoutes = require('./routes/employeeRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const complaintRoutes = require("./routes/complaintRoutes");
+const taskRoutes = require("./routes/task");
+
 
 const { initializeAdmin } = require('./controllers/authController'); // Import function
 require('dotenv').config();
@@ -29,7 +31,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/tasks', require('./routes/tasks'));
 app.use("/api/complaints", complaintRoutes);
-
+app.use("/api/tasks", taskRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
