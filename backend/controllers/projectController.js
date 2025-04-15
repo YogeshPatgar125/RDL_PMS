@@ -212,25 +212,87 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
-// ✅ Get projects assigned to a specific employee
-exports.getProjectsByEmployee = async (req, res) => {
+
+exports.getProjectsForEmployee = async (req, res) => {
+  const { id } = req.params;
+  const projects = await Project.find({ assignedEmployees: id });
+  res.json(projects);
+};
+
+exports.getProjectsForTeamLeader = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { employeeId } = req.params;
+    const projects = await Project.find({ 'teamLeader._id': id })
+      .populate('assignedEmployees', 'name role'); // Optional: if needed on frontend
 
-    if (!employeeId || !/^[0-9a-fA-F]{24}$/.test(employeeId)) {
-      return res.status(400).json({ message: 'Invalid employee ID' });
-    }
-
-    const projects = await Project.find({ assignedEmployees: employeeId }).lean();
-
-    if (!projects || projects.length === 0) {
-      return res.status(404).json({ message: 'No projects found for this employee' });
-    }
-
-    res.status(200).json(projects);
+    res.json(projects);
   } catch (error) {
-    console.error('Error fetching projects:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error fetching projects for team leader:", error);
+    res.status(500).json({ message: "Server error while fetching projects" });
   }
 };
+
+
+
+ 
+// ✅ Update Project Status
+exports.updateProjectStatus = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { status } = req.body;
+
+    if (!['Pending', 'Complete', 'Cancel'].includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const project = await Project.findByIdAndUpdate(
+      projectId,
+      { status },
+      { new: true }
+    );
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    res.status(200).json({
+      success: true, // Add this line
+      message: "Project status updated successfully",
+      project,
+    });    
+  } catch (error) {
+    console.error("❌ Error updating project status:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Update Project Team Members (Add more employees)
+// exports.updateProjectTeamMembers = async (req, res) => {
+//   try {
+//     const { projectId } = req.params;
+//     const { additionalEmployees } = req.body;
+
+//     if (!Array.isArray(additionalEmployees) || additionalEmployees.length === 0) {
+//       return res.status(400).json({ message: "No employees provided to add" });
+//     }
+
+//     const project = await Project.findById(projectId);
+
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
+
+//     // Add new employees to assignedEmployees
+//     project.assignedEmployees = [...new Set([...project.assignedEmployees, ...additionalEmployees])];
+
+//     const updatedProject = await project.save();
+
+//     res.status(200).json({
+//       message: "Project team members updated successfully",
+//       project: updatedProject,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error updating project team members:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 

@@ -44,7 +44,8 @@ const AssignEmployees = () => {
     navigate('/assignemployees', {
       state: {
         projectId,
-        selectedEmployees
+        selectedEmployees,
+        returnTo: `/assign-employees/${projectId}`,
       },
     });
   };
@@ -142,4 +143,5 @@ const AssignEmployees = () => {
 };
 
 export default AssignEmployees;
+
 

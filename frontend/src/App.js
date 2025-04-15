@@ -167,6 +167,7 @@ import AssignEmployees from "./pages/AssignEmployee";
 import AssignEmployeesList from "./pages/AssignEmployeeList";
 import ProjectDetails from "./pages/ProjectDetails";
 import TeamLeadTasks from "./pages/TeamLeadTasks"
+import TLprojectDetails from "./pages/TLprojectDetails";
 
 // Route Protection Component
 const ProtectedRoute = ({ children, roleRequired }) => {
@@ -244,9 +245,14 @@ function App() {
         <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
         <Route path="/projectdetails/:projectId" element={<ProtectedRoute><ProjectDetails/></ProtectedRoute>} />
         <Route path="/teamleadtasks" element={<ProtectedRoute><TeamLeadTasks /></ProtectedRoute>} />
+        <Route path="/teamleadproject/:projectId" element={<ProtectedRoute><TLprojectDetails /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
+
+
+

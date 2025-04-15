@@ -30,9 +30,12 @@ const {
   getProjects,
   getAllEmployee,
   getProjectById,
-  getProjectsByEmployee,
+  getProjectsForEmployee,
+  getProjectsForTeamLeader,
+  updateProjectStatus,
 } = require('../controllers/projectController');
 const { assignEmployeesToProject } = require('../controllers/teamleaderController');
+const { authenticateToken } = require("../middlewares/authMiddleware")
 
 const router = express.Router();
 
@@ -42,6 +45,10 @@ router.post('/', createProject);
 router.get('/', getProjects);
 router.put('/assign-employees/:projectId', assignEmployeesToProject);
 router.get('/:projectId', getProjectById);
-router.get('/employee/projects/:employeeId', getProjectsByEmployee);
+// For employee
+router.get("/employee/projects/:id", authenticateToken, getProjectsForEmployee);
+router.get("/teamleader/projects/:id", authenticateToken, getProjectsForTeamLeader);
+router.put('/status/:projectId', updateProjectStatus);
+
 
 module.exports = router;

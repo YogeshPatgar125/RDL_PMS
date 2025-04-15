@@ -46,10 +46,18 @@ const AssignEmployeesList = () => {
   };
 
   const handleDone = () => {
-    navigate(`/assign-employees/${projectId}`, {
-      state: { selectedEmployees },
+    const returnTo = location.state?.returnTo || '/';
+    const keyToSend = location.state?.returnKey || 'selectedEmployees'; // default for existing usage
+  
+    navigate(returnTo, {
+      state: {
+        [keyToSend]: selectedEmployees,
+        projectId,
+      },
     });
   };
+  
+  
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -146,3 +154,5 @@ const AssignEmployeesList = () => {
 };
 
 export default AssignEmployeesList;
+
+

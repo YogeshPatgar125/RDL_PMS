@@ -1,34 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { Box, Card, CardContent, Typography, Button, Grid } from "@mui/material";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for React Router
-import { getAssignedProjects } from "../api/api"; // Assume this is a new API function we'll create
+import { useNavigate } from "react-router-dom";
+import { getAssignedProjects } from "../api/api";
 
 const EmProject = () => {
   const [projects, setProjects] = useState([]);
-  const navigate = useNavigate(); // Initialize navigate for routing
+  const navigate = useNavigate();
 
-  // Fetch assigned projects for the employee
   useEffect(() => {
     const fetchAssignedProjects = async () => {
       try {
-        const employeeId = localStorage.getItem("userId"); // Assume employee's userId is stored in localStorage
-        const fetchedProjects = await getAssignedProjects(employeeId);
-        console.log(fetchedProjects); // Check the data structure
-        setProjects(fetchedProjects); // Assuming fetchedProjects is an array of project objects
+        const userId = localStorage.getItem("userId");
+        const role = localStorage.getItem("role"); // "employee" or "teamleader"
+  
+        const fetchedProjects = await getAssignedProjects(userId, role);
+        setProjects(fetchedProjects);
       } catch (error) {
         console.error("Error fetching assigned projects:", error);
       }
     };
-
+  
     fetchAssignedProjects();
   }, []);
+  
 
   const handleViewDetailsClick = (projectId) => {
-    // Use navigate from React Router to navigate to the project details page
-    navigate(`/projectdetails/${projectId}`);
+    const role = localStorage.getItem("role");
+  
+    if (role === "teamleader") {
+      navigate(`/teamleadproject/${projectId}`);
+    } else {
+      navigate(`/projectdetails/${projectId}`);
+    }
   };
-
+  
   return (
     <Box
       sx={{
@@ -59,7 +65,7 @@ const EmProject = () => {
 
       <Grid container spacing={3} justifyContent="center" sx={{ width: "80%" }}>
         {projects.map((project) => (
-          <Grid item xs={12} sm={6} md={4} key={project._id}> {/* Use _id as the unique key */}
+          <Grid item xs={12} sm={6} md={4} key={project._id}>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.3 }}>
               <Card
                 sx={{
@@ -77,7 +83,7 @@ const EmProject = () => {
               >
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" textAlign="center" color="#0D47A1">
-                    {project.projectName} {/* Ensure projectName exists in your data */}
+                    {project.projectName}
                   </Typography>
                   <Button
                     variant="contained"
@@ -93,7 +99,7 @@ const EmProject = () => {
                       },
                     }}
                     fullWidth
-                    onClick={() => handleViewDetailsClick(project._id)} 
+                    onClick={() => handleViewDetailsClick(project._id)}
                   >
                     View Details
                   </Button>

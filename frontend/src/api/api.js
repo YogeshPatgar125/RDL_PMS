@@ -88,24 +88,6 @@ export const getNotifications = async (userId) => {
 };
 
 // // 5. Mark All Notifications as Read
-// export const handleMarkAsRead = async (userId) => {
-//   try {
-//     const token = getAuthToken();
-//     if (!token) throw { message: "Unauthorized: No token provided" };
-
-//     const response = await axios.post(
-//       `${NOTIFICATION_API_URL}/mark-read`,
-//       { userId },
-//       {
-//         headers: { Authorization: `Bearer ${token}` },
-//       }
-//     );
-
-//     return response.data;
-//   } catch (error) {
-//     throw error.response?.data || { message: "Failed to mark notifications as read" };
-//   }
-// };
 
 export const handleMarkAsRead = async (notificationId) => {
   try {
@@ -187,12 +169,17 @@ export const getAllEmployee = async () => {
 
 
 // 8. Fetch Projects Assigned to an Employee
-export const getAssignedProjects = async (employeeId) => {
+export const getAssignedProjects = async (userId, role) => {
   try {
     const token = getAuthToken();
     if (!token) throw new Error("Unauthorized: No token provided");
 
-    const response = await axios.get(`${PROJECT_API_URL}/employee/projects/${employeeId}`, {
+    const url =
+      role === "employee"
+        ? `${PROJECT_API_URL}/employee/projects/${userId}`
+        : `${PROJECT_API_URL}/teamleader/projects/${userId}`;
+
+    const response = await axios.get(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -201,3 +188,46 @@ export const getAssignedProjects = async (employeeId) => {
     throw error.response?.data || { message: "Failed to fetch assigned projects" };
   }
 };
+
+
+// 9. Update Project Status
+export const updateProjectStatus = async (projectId, status) => {
+  try {
+    const token = getAuthToken();
+    if (!token) throw new Error("Unauthorized: No token provided");
+
+    const response = await axios.put(
+      `${PROJECT_API_URL}/status/${projectId}`,
+      { status },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Failed to update project status" };
+  }
+};
+
+
+
+// 10. Update Project Team Members (Add more employees)
+// export const updateProjectTeamMembers = async (projectId, additionalEmployees) => {
+//   try {
+//     const token = getAuthToken();
+//     if (!token) throw new Error("Unauthorized: No token provided");
+
+//     const response = await axios.put(
+//       `${PROJECT_API_URL}/update-team-members/${projectId}`,
+//       { additionalEmployees },
+//       {
+//         headers: { Authorization: `Bearer ${token}` },
+//       }
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     throw error.response?.data || { message: "Failed to update team members" };
+//   }
+// };
