@@ -1,47 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Box,
-    TextField,
-    InputAdornment,
-    Typography,
-    IconButton,
-    Button, 
-  } from "@mui/material";
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, Box, TextField, InputAdornment, Typography, IconButton, Button
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-
-const completedProjects = [
-  { id: 1, name: "Website Redesign", leader: "Alice", completedOn: "25 Mar 2025", reportUrl: "/reports/website-redesign.pdf" },
-  { id: 2, name: "Mobile App Development", leader: "Bob", completedOn: "30 Mar 2025", reportUrl: "/reports/mobile-app.pdf" },
-  { id: 3, name: "Marketing Campaign", leader: "Charlie", completedOn: "18 Mar 2025", reportUrl: "/reports/marketing-campaign.pdf" },
-  { id: 4, name: "CRM Integration", leader: "David", completedOn: "28 Mar 2025", reportUrl: "/reports/crm-integration.pdf" },
-  { id: 5, name: "Security Audit", leader: "Eva", completedOn: "5 Apr 2025", reportUrl: "/reports/security-audit.pdf" },
-  { id: 6, name: "Cloud Migration", leader: "Frank", completedOn: "10 Apr 2025", reportUrl: "/reports/cloud-migration.pdf" },
-];
+import axios from "axios";
 
 const Complete = () => {
+  const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 5;
 
-  // Handle search input
+  // Fetch projects
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/projects");
+        const completed = res.data.filter(p => p.status === "Complete");
+        setProjects(completed);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  // Handle search
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset pagination when searching
+    setCurrentPage(1);
   };
 
-  // Filter projects based on search term
-  const filteredProjects = completedProjects.filter(
+  const filteredProjects = projects.filter(
     (project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.leader.toLowerCase().includes(searchTerm.toLowerCase())
+      project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (project.teamLeader?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Pagination logic
@@ -50,7 +45,6 @@ const Complete = () => {
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
 
-  // Handlers for next and previous buttons
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
@@ -59,18 +53,16 @@ const Complete = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // Handle PDF download
-  const handleDownload = (url) => {
+  const handleDownload = (projectName) => {
+    const filename = `${projectName.replace(/\s+/g, "-").toLowerCase()}.pdf`;
     const link = document.createElement("a");
-    link.href = url;
-    link.download = url.substring(url.lastIndexOf("/") + 1);
+    link.href = `/reports/${filename}`;
+    link.download = filename;
     link.click();
   };
 
   return (
     <div>
-
-      {/* Search Bar */}
       <Box display="flex" justifyContent="flex-end" mt={2} mr={3}>
         <TextField
           label="Search Project"
@@ -87,7 +79,6 @@ const Complete = () => {
         />
       </Box>
 
-      {/* Table Container */}
       <TableContainer
         component={Paper}
         sx={{
@@ -113,19 +104,19 @@ const Complete = () => {
             {currentProjects.length > 0 ? (
               currentProjects.map((project, index) => (
                 <TableRow
-                  key={indexOfFirstProject + index}
+                  key={project._id}
                   sx={{
                     backgroundColor: index % 2 === 0 ? "#E8F5E9" : "white",
                     "&:hover": { backgroundColor: "#C8E6C9" },
                   }}
                 >
                   <TableCell>{indexOfFirstProject + index + 1}</TableCell>
-                  <TableCell>{project.name}</TableCell>
-                  <TableCell>{project.leader}</TableCell>
-                  <TableCell>{project.completedOn}</TableCell>
+                  <TableCell>{project.projectName}</TableCell>
+                  <TableCell>{project.teamLeader?.name || "N/A"}</TableCell>
+                  <TableCell>{project.dueDate}</TableCell>
                   <TableCell>
                     <IconButton
-                      onClick={() => handleDownload(project.reportUrl)}
+                      onClick={() => handleDownload(project.projectName)}
                       sx={{
                         color: "#4CAF50",
                         "&:hover": { color: "#388E3C" },
@@ -140,7 +131,7 @@ const Complete = () => {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  No projects found
+                  No completed projects found
                 </TableCell>
               </TableRow>
             )}
@@ -148,7 +139,6 @@ const Complete = () => {
         </Table>
       </TableContainer>
 
-      {/* Pagination Controls */}
       <Box display="flex" justifyContent="center" alignItems="center" mt={3}>
         <Button
           variant="contained"

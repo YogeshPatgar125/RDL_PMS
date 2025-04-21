@@ -1,60 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-  TextField,
-  InputAdornment,
-  Typography,
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, Button, Box,
+  TextField, InputAdornment, Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-
-const allProjects = [
-  { id: 1, name: "Website Redesign", leader: "Alice", dueDate: "25 Mar 2025" },
-  { id: 2, name: "Mobile App Development", leader: "Bob", dueDate: "30 Mar 2025" },
-  { id: 3, name: "Marketing Campaign", leader: "Charlie", dueDate: "18 Mar 2025" },
-  { id: 4, name: "CRM Integration", leader: "David", dueDate: "28 Mar 2025" },
-  { id: 5, name: "Security Audit", leader: "Eva", dueDate: "5 Apr 2025" },
-  { id: 6, name: "Cloud Migration", leader: "Frank", dueDate: "10 Apr 2025" },
-  { id: 7, name: "New Feature Rollout", leader: "Grace", dueDate: "15 Apr 2025" },
-  { id: 8, name: "Data Analytics Dashboard", leader: "Hannah", dueDate: "20 Apr 2025" },
-  { id: 9, name: "E-Commerce Platform", leader: "Ian", dueDate: "25 Apr 2025" },
-  { id: 10, name: "AI Chatbot Implementation", leader: "Jack", dueDate: "30 Apr 2025" },
-  { id: 11, name: "Blockchain Integration", leader: "Kate", dueDate: "5 May 2025" },
-  { id: 12, name: "Cybersecurity Enhancement", leader: "Leo", dueDate: "10 May 2025" },
-];
+import axios from "axios";
 
 const PendingPage = () => {
+  const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 5;
 
-  // Handle search input
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/projects"); // Replace with your actual endpoint
+        const pendingProjects = response.data.filter(
+          (project) => project.status === "Pending"
+        );
+        setProjects(pendingProjects);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+    fetchProjects();
+  }, []);
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset pagination when searching
+    setCurrentPage(1);
   };
 
-  // Filter projects based on search term
-  const filteredProjects = allProjects.filter(
+  const filteredProjects = projects.filter(
     (project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.leader.toLowerCase().includes(searchTerm.toLowerCase())
+      project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.teamLeader?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
 
-  // Handlers for next and previous buttons
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
@@ -65,7 +54,6 @@ const PendingPage = () => {
 
   return (
     <div>
-
       {/* Search Bar */}
       <Box display="flex" justifyContent="flex-end" mt={2} mr={3}>
         <TextField
@@ -83,7 +71,7 @@ const PendingPage = () => {
         />
       </Box>
 
-      {/* Table Container */}
+      {/* Table */}
       <TableContainer
         component={Paper}
         sx={{
@@ -97,7 +85,7 @@ const PendingPage = () => {
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#FFB300" }}> {/* Yellowish Orange */}
+            <TableRow sx={{ backgroundColor: "#FFB300" }}>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Sl.No</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Project Name</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Leader</TableCell>
@@ -109,22 +97,22 @@ const PendingPage = () => {
             {currentProjects.length > 0 ? (
               currentProjects.map((project, index) => (
                 <TableRow
-                  key={indexOfFirstProject + index} // Unique key
+                  key={project._id}
                   sx={{
-                    backgroundColor: index % 2 === 0 ? "#FFECB3" : "white", // Lighter yellow-orange
-                    "&:hover": { backgroundColor: "#FFCC80" }, // Slightly darker shade
+                    backgroundColor: index % 2 === 0 ? "#FFECB3" : "white",
+                    "&:hover": { backgroundColor: "#FFCC80" },
                   }}
                 >
                   <TableCell>{indexOfFirstProject + index + 1}</TableCell>
-                  <TableCell>{project.name}</TableCell>
-                  <TableCell>{project.leader}</TableCell>
+                  <TableCell>{project.projectName}</TableCell>
+                  <TableCell>{project.teamLeader?.name || "N/A"}</TableCell>
                   <TableCell>{project.dueDate}</TableCell>
                   <TableCell>
                     <Button
                       variant="contained"
                       sx={{
-                        backgroundColor: "#FB8C00", // Deep orange
-                        "&:hover": { backgroundColor: "#FFB74D" }, // Lighter orange on hover
+                        backgroundColor: "#FB8C00",
+                        "&:hover": { backgroundColor: "#FFB74D" },
                       }}
                       size="small"
                     >
@@ -136,7 +124,7 @@ const PendingPage = () => {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  No projects found
+                  No pending projects found
                 </TableCell>
               </TableRow>
             )}
@@ -158,11 +146,9 @@ const PendingPage = () => {
         >
           Previous
         </Button>
-
         <Typography variant="body1">
           Page {currentPage} of {totalPages}
         </Typography>
-
         <Button
           variant="contained"
           onClick={handleNextPage}
