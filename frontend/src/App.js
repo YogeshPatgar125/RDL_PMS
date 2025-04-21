@@ -168,6 +168,7 @@ import AssignEmployeesList from "./pages/AssignEmployeeList";
 import ProjectDetails from "./pages/ProjectDetails";
 import TeamLeadTasks from "./pages/TeamLeadTasks"
 import TLprojectDetails from "./pages/TLprojectDetails";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 
 // Route Protection Component
 const ProtectedRoute = ({ children, roleRequired }) => {
@@ -246,6 +247,7 @@ function App() {
         <Route path="/projectdetails/:projectId" element={<ProtectedRoute><ProjectDetails/></ProtectedRoute>} />
         <Route path="/teamleadtasks" element={<ProtectedRoute><TeamLeadTasks /></ProtectedRoute>} />
         <Route path="/teamleadproject/:projectId" element={<ProtectedRoute><TLprojectDetails /></ProtectedRoute>} />
+        <Route path="/project/:id" element={<ProjectDetailsPage />} />
       </Routes>
     </Router>
   );

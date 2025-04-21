@@ -6,6 +6,8 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 
 const CancelPage = () => {
@@ -13,6 +15,12 @@ const CancelPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 5;
+  const navigate = useNavigate();
+
+  const handleDetailsClick = (projectId) => {
+    navigate(`/project/${projectId}`);
+  };
+
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -108,9 +116,18 @@ const CancelPage = () => {
                   <TableCell>{project.teamLeader?.name || "N/A"}</TableCell>
                   <TableCell>{project.dueDate}</TableCell>
                   <TableCell>
-                  <Button variant="contained" color="error" size="small">
-                      Details
-                    </Button>
+                  <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#D32F2F",
+                    "&:hover": { backgroundColor: " #FF6F61" },
+                  }}
+                  size="small"
+                  onClick={() => handleDetailsClick(project._id)}
+                >
+                  Details
+                </Button>
+
                   </TableCell>
                 </TableRow>
               ))

@@ -6,12 +6,22 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const PendingPage = () => {
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 5;
+  const navigate = useNavigate();
+
+  const handleDetailsClick = (projectId) => {
+    navigate(`/project/${projectId}`);
+  };
+
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -108,16 +118,18 @@ const PendingPage = () => {
                   <TableCell>{project.teamLeader?.name || "N/A"}</TableCell>
                   <TableCell>{project.dueDate}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "#FB8C00",
-                        "&:hover": { backgroundColor: "#FFB74D" },
-                      }}
-                      size="small"
-                    >
-                      Details
-                    </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#FB8C00",
+                      "&:hover": { backgroundColor: "#FFB74D" },
+                    }}
+                    size="small"
+                    onClick={() => handleDetailsClick(project._id)}
+                  >
+                    Details
+                  </Button>
+
                   </TableCell>
                 </TableRow>
               ))
