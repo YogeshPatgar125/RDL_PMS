@@ -144,7 +144,7 @@ const ProjectDashboard = () => {
   return (
     <Box p={3} sx={{ backgroundColor: '#f5f9ff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h4" fontWeight="bold" color="#1e3a8a" mb={3}>
-        Project Dashboard
+        Admin Dashboard
       </Typography>
 
       <Grid container spacing={3}>
@@ -182,6 +182,7 @@ const ProjectDashboard = () => {
       <Typography variant="h5" fontWeight="bold" color="#1e3a8a" sx={{ mb: 2 }}>
         Project List
       </Typography>
+      
 
       {loading ? (
         <Box display="flex" justifyContent="center" mt={4}>
