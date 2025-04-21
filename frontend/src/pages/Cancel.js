@@ -1,56 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-  Typography,
-  TextField,
-  InputAdornment
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, Button, Box,
+  TextField, InputAdornment, Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import axios from "axios";
 
-const cancelledProjects = [
-  { id: 1, name: "Website Redesign", leader: "Alice" },
-  { id: 2, name: "Mobile App Development", leader: "Bob" },
-  { id: 3, name: "Marketing Campaign", leader: "Charlie" },
-  { id: 4, name: "CRM Integration", leader: "David" },
-  { id: 5, name: "Security Audit", leader: "Eva" },
-  { id: 6, name: "Cloud Migration", leader: "Frank" },
-  { id: 7, name: "New Feature Rollout", leader: "Grace" },
-  { id: 8, name: "Data Analytics Dashboard", leader: "Hannah" },
-  { id: 9, name: "E-Commerce Platform", leader: "Ian" },
-  { id: 10, name: "AI Chatbot Implementation", leader: "Jack" }
-];
 
 const CancelPage = () => {
+  const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 5; // Displaying 5 per page
+  const projectsPerPage = 5;
 
-  // Filter projects based on search term
-  const filteredProjects = cancelledProjects.filter(
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/projects"); // Replace with your actual endpoint
+        const pendingProjects = response.data.filter(
+          (project) => project.status === "Cancel"
+        );
+        setProjects(pendingProjects);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+    fetchProjects();
+  }, []);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const filteredProjects = projects.filter(
     (project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.leader.toLowerCase().includes(searchTerm.toLowerCase())
+      project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.teamLeader?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
-
-  // Handlers
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    setCurrentPage(1); // Reset to first page on search
-  };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -62,7 +54,6 @@ const CancelPage = () => {
 
   return (
     <div>
-
       {/* Search Bar */}
       <Box display="flex" justifyContent="flex-end" mt={2} mr={3}>
         <TextField
@@ -80,7 +71,7 @@ const CancelPage = () => {
         />
       </Box>
 
-      {/* Table Container */}
+      {/* Table */}
       <TableContainer
         component={Paper}
         sx={{
@@ -89,15 +80,16 @@ const CancelPage = () => {
           borderRadius: 2,
           boxShadow: 3,
           overflowX: "auto",
-          mt: 3,
+          mt: 2,
         }}
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#D32F2F" }}>
+          <TableRow sx={{ backgroundColor: "#D32F2F" }}>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Sl.No</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Project Name</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Leader</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Due Date</TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -105,17 +97,18 @@ const CancelPage = () => {
             {currentProjects.length > 0 ? (
               currentProjects.map((project, index) => (
                 <TableRow
-                  key={project.id}
+                  key={project._id}
                   sx={{
                     backgroundColor: index % 2 === 0 ? "#FFEBEE" : "white",
                     "&:hover": { backgroundColor: "#FFCDD2" },
                   }}
                 >
                   <TableCell>{indexOfFirstProject + index + 1}</TableCell>
-                  <TableCell>{project.name}</TableCell>
-                  <TableCell>{project.leader}</TableCell>
+                  <TableCell>{project.projectName}</TableCell>
+                  <TableCell>{project.teamLeader?.name || "N/A"}</TableCell>
+                  <TableCell>{project.dueDate}</TableCell>
                   <TableCell>
-                    <Button variant="contained" color="error" size="small">
+                  <Button variant="contained" color="error" size="small">
                       Details
                     </Button>
                   </TableCell>
@@ -123,8 +116,8 @@ const CancelPage = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} align="center">
-                  No cancelled projects found
+                <TableCell colSpan={5} align="center">
+                  No pending projects found
                 </TableCell>
               </TableRow>
             )}
@@ -146,7 +139,6 @@ const CancelPage = () => {
         >
           Previous
         </Button>
-
         <Typography variant="body1" sx={{ mx: 2, fontWeight: "bold", color: "#D32F2F" }}>
           Page {currentPage} of {totalPages}
         </Typography>
