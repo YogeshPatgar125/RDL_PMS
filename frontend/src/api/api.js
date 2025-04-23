@@ -211,6 +211,39 @@ export const updateProjectStatus = async (projectId, status) => {
 };
 
 
+// get teamleader of the project
+export const fetchTeamLeaderProjects = async (userId) => {
+  try {
+    const token = getAuthToken();
+    if (!token) throw new Error("Unauthorized: No token provided");
+
+    const response = await axios.get(`${PROJECT_API_URL}/teamleader/projects/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching team leader projects:", error);
+    throw error;
+  }
+};
+
+//get employee of the project
+export const fetchEmployeeProjects = async (userId) => {
+  try {
+    const token = getAuthToken();
+    if (!token) throw new Error("Unauthorized: No token provided");
+
+    const response = await axios.get(`${PROJECT_API_URL}/employee/projects/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching team leader projects:", error);
+    throw error;
+  }
+};
+
+
 
 // 10. Update Project Team Members (Add more employees)
 // export const updateProjectTeamMembers = async (projectId, additionalEmployees) => {

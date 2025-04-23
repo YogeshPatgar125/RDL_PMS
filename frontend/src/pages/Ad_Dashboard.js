@@ -195,7 +195,7 @@ const ProjectDashboard = () => {
               <CardContent>
               <Grid container spacing={1} sx={{ fontWeight: 'bold', mb: 1, backgroundColor: '#005792', color: '#ffffff', padding: '10px', borderRadius: '8px' }}>
 
-                  <Grid item xs={1}><Typography>Id</Typography></Grid>
+                  <Grid item xs={1}><Typography>Sl No.</Typography></Grid>
                   <Grid item xs={3}><Typography>Project Name</Typography></Grid>
                   <Grid item xs={3}><Typography>Assigned To</Typography></Grid>
                   <Grid item xs={2}><Typography>Due Date</Typography></Grid>
