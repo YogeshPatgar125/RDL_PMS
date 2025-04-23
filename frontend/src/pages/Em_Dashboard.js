@@ -544,10 +544,9 @@ const ProjectDashboard = () => {
 
       <Grid container spacing={3}>
         {[{
-          title: 'Total Projects', value: totalProjects, color: '#1e3a8a', bg: '#b3d4fc'
-        }, {
-          title: 'Employees', value: employeesCount, color: '#0d47a1', bg: '#e2f1ff'
-        }].map((item, index) => (
+          title: 'Assigned Projects', value: totalProjects, color: '#1e3a8a', bg: '#b3d4fc'
+        }
+       ].map((item, index) => (
           <Grid item xs={12} sm={6} key={index}>
             <Card sx={{
               background: `linear-gradient(145deg, ${item.bg}, white)`,
