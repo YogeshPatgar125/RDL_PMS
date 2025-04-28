@@ -267,6 +267,7 @@ const Navbar = () => {
   const [specificRole, setSpecificRole] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [prevPath, setPrevPath] = useState(""); // <-- added
 
   const userId = localStorage.getItem("userId");
 
@@ -296,18 +297,34 @@ const Navbar = () => {
     if (location.pathname === "/notifications") {
       fetchNotifications();
     }
-  }, [location.pathname]);
+
+    // Check if user navigated away from /notifications
+    if (prevPath === "/notifications" && location.pathname !== "/notifications") {
+      fetchNotifications();
+    }
+
+    setPrevPath(location.pathname);
+  }, [location.pathname]); // <-- updated this useEffect
 
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications(userId);
-      setNotifications(data.notifications || []);
+      console.log("Fetched Data:", data);
+
+      if (Array.isArray(data)) {
+        setNotifications(data);
+      } else if (data && Array.isArray(data.notifications)) {
+        setNotifications(data.notifications);
+      } else {
+        setNotifications([]);
+      }
     } catch (err) {
       console.error("Error fetching notifications:", err);
+      setNotifications([]);
     }
   };
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleLogout = () => {
     localStorage.clear();
@@ -326,7 +343,7 @@ const Navbar = () => {
     ],
     teamleader: [
       { label: "Dashboard", path: "/tldashboard" },
-      { label: "Team Projects", path: "/projects" }, // Make sure these pages exist
+      { label: "Team Projects", path: "/projects" },
       { label: "Daily Update", path: "/teamleadtasks" },
     ],
     employee: [
@@ -429,7 +446,11 @@ const Navbar = () => {
                 sx={{ color: "white", ml: 2 }}
                 onClick={() => navigate("/notifications")}
               >
-                <Badge badgeContent={unreadCount} color="error">
+                <Badge
+                  badgeContent={unreadCount > 0 ? unreadCount : null}
+                  color="error"
+                  overlap="circular"
+                >
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
