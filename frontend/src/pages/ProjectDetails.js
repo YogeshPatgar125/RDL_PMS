@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, Chip } from '@mui/material';
+import {
+  Box, Typography, Button, Chip, Paper, Grid, Avatar, Divider
+} from '@mui/material';
+import {
+  AssignmentOutlined, PeopleAltOutlined, PersonOutline, DescriptionOutlined, DoneAll
+} from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getProjectById } from '../api/api';
 import { ToastContainer, toast } from 'react-toastify';
@@ -23,7 +28,6 @@ const ProjectDetails = () => {
         setTeamLeaderName(data.teamLeader?.name || 'N/A');
         setAssignedEmployees(data.assignedEmployees || []);
       } catch (error) {
-        console.error("Failed to fetch project:", error);
         toast.error("Error fetching project data.");
       }
     };
@@ -32,48 +36,88 @@ const ProjectDetails = () => {
   }, [projectId]);
 
   const handleDone = () => {
-    navigate('/emdashboard'); // ✅ Adjust if your employee dashboard path is different
+    navigate('/emdashboard');
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: 'auto', mt: 5, p: 3, borderRadius: 4, boxShadow: 5, backgroundColor: '#f8faff' }}>
-      <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#1976D2' }}>
-        Project Details
-      </Typography>
+    <Box sx={{ maxWidth: 900, mx: 'auto', my: 6 }}>
+      <Paper elevation={6} sx={{ borderRadius: 4, p: 4, background: '#f4f7fb' }}>
+        <Box
+          sx={{
+            mb: 4,
+            p: 2,
+            borderRadius: 2,
+            textAlign: 'center',
+            background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+            color: 'white',
+          }}
+        >
+          <Typography variant="h4" fontWeight="bold">
+            <AssignmentOutlined sx={{ verticalAlign: 'middle', mr: 1 }} />
+            Project Details
+          </Typography>
+        </Box>
 
-      <TextField fullWidth label="Project Name" value={projectName} disabled margin="normal" />
-      <TextField fullWidth label="Description" value={description} disabled multiline rows={4} margin="normal" />
-      <TextField fullWidth label="Team Leader" value={teamLeaderName} disabled margin="normal" />
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              <AssignmentOutlined fontSize="small" sx={{ mr: 1 }} /> Project Name
+            </Typography>
+            <Typography variant="h6">{projectName}</Typography>
+          </Grid>
 
-      <Box sx={{ mt: 2 }}>
-        <Typography sx={{ mb: 1, fontWeight: 'bold', color: '#1565C0' }}>
-          Assigned Employees
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              <PersonOutline fontSize="small" sx={{ mr: 1 }} /> Team Leader
+            </Typography>
+            <Typography variant="body1">{teamLeaderName}</Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              <DescriptionOutlined fontSize="small" sx={{ mr: 1 }} /> Description
+            </Typography>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{description}</Typography>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 4 }} />
+
+        <Typography variant="h6" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+          <PeopleAltOutlined sx={{ mr: 1, color: '#1976d2' }} /> Assigned Employees
         </Typography>
 
         {assignedEmployees.length > 0 ? (
-          <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {assignedEmployees.map((emp) => (
               <Chip
                 key={emp._id}
-                label={`${emp.name} — ${emp.specificRole || 'N/A'}`}
-                color="primary"
+                avatar={<Avatar>{emp.name?.[0]}</Avatar>}
+                label={`${emp.name} • ${emp.specificRole || 'N/A'}`}
+                variant="outlined"
+                sx={{ backgroundColor: '#e3f2fd' }}
               />
             ))}
           </Box>
         ) : (
-          <Typography>No employees assigned yet.</Typography>
+          <Typography color="text.secondary" sx={{ mt: 1 }}>
+            No employees assigned yet.
+          </Typography>
         )}
-      </Box>
 
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Button
-          variant="contained"
-          onClick={handleDone}
-          sx={{ backgroundColor: '#1976D2' }}
-        >
-          Done
-        </Button>
-      </Box>
+        <Box sx={{ textAlign: 'center', mt: 5 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<DoneAll />}
+            size="large"
+            sx={{ px: 5 }}
+            onClick={handleDone}
+          >
+            Done
+          </Button>
+        </Box>
+      </Paper>
 
       <ToastContainer />
     </Box>
