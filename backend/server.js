@@ -8,6 +8,9 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const complaintRoutes = require("./routes/complaintRoutes");
 const taskRoutes = require("./routes/task");
 const statsRoutes = require('./routes/stats'); // adjust path if needed
+const reportRoutes = require('./routes/reportRoutes');
+
+
 
 
 const { initializeAdmin } = require('./controllers/authController'); // Import function
@@ -35,6 +38,8 @@ app.use("/api/complaints", complaintRoutes);
 app.use("/api/tasks", taskRoutes);
 // Register routes
 app.use('/api', statsRoutes);
+app.use('/api/report', reportRoutes);
+
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);

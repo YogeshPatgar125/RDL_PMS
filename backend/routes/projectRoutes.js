@@ -35,7 +35,7 @@ const {
   updateProjectStatus,
 } = require('../controllers/projectController');
 const { assignEmployeesToProject } = require('../controllers/teamleaderController');
-const { authenticateToken } = require("../middlewares/authMiddleware")
+const { authenticateToken } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
