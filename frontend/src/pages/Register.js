@@ -13,7 +13,15 @@ import {
   Typography,
   Box,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
+import {
+  Email as EmailIcon,
+  Lock as LockIcon,
+  Person as PersonIcon,
+  AssignmentInd as AssignmentIndIcon,
+  Work as WorkIcon,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { addUser } from "../api/api";
 
@@ -24,7 +32,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     role: "",
-    specificRole: "", // Added specificRole field
+    specificRole: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -39,22 +47,22 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    let newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+]{6,}$/;
 
+    let newErrors = {};
     if (!employee.name.trim()) newErrors.name = "Name is required.";
     if (!employee.email.trim()) newErrors.email = "Email is required.";
     else if (!emailRegex.test(employee.email)) newErrors.email = "Invalid email format.";
     if (!employee.password.trim()) newErrors.password = "Password is required.";
     else if (!passwordRegex.test(employee.password))
       newErrors.password = "Password must be 6+ chars and include a number.";
-    if (!employee.confirmPassword.trim()) newErrors.confirmPassword = "Confirm Password is required.";
-    if (employee.password !== employee.confirmPassword)
+    if (!employee.confirmPassword.trim()) newErrors.confirmPassword = "Confirm your password.";
+    else if (employee.password !== employee.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match.";
     if (!employee.role) newErrors.role = "Please select a role.";
     if (employee.role === "employee" && !employee.specificRole)
-      newErrors.specificRole = "Please select a specific role for the employee.";
+      newErrors.specificRole = "Please select a specific role.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -77,10 +85,8 @@ const Register = () => {
         userData.specificRole = employee.specificRole;
       }
 
-      const response = await addUser(userData);
-      console.log("Registered:", response.data);
-      alert("Employee added successfully! ");
-
+      await addUser(userData);
+      alert("Employee added successfully!");
       setEmployee({
         name: "",
         email: "",
@@ -93,8 +99,7 @@ const Register = () => {
       setServerError("");
       navigate("/addashboard");
     } catch (error) {
-      console.error("Registration Error:", error);
-      setServerError(error.response?.data?.message || "failed. Try again.");
+      setServerError(error.response?.data?.message || "Failed. Try again.");
     }
     setLoading(false);
   };
@@ -103,63 +108,89 @@ const Register = () => {
     <Box
       sx={{
         minHeight: "100vh",
+        backgroundColor: "#f0f2f5",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
-        backgroundColor: "#f4f6f8",
-        paddingTop: "80px",
-        overflowY: "auto",
+        justifyContent: "center",
+        p: 3,
       }}
     >
-      <Container maxWidth="lg" sx={{ mt: 8 }}>
-        <Grid container spacing={3} alignItems="center" justifyContent="center">
-          <Grid item xs={12} md={5}>
-            <Card elevation={3} sx={{ borderRadius: "10px", p: 3 }}>
-              <CardContent>
-                {serverError && (
-                  <Typography color="error" textAlign="center">
-                    {serverError}
-                  </Typography>
-                )}
+      <Container maxWidth="sm">
+        <Card elevation={5} sx={{ borderRadius: 4, px: 4, py: 5 }}>
+          <CardContent>
+            <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+              Register
+            </Typography>
+            <Typography variant="body2" align="center" color="text.secondary" gutterBottom>
+              Add a new team member
+            </Typography>
 
+            {serverError && (
+              <Typography color="error" align="center" sx={{ mb: 2 }}>
+                {serverError}
+              </Typography>
+            )}
+
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Enter Employee Name"
+                  label="Full Name"
                   name="name"
                   value={employee.name}
                   onChange={handleChange}
-                  variant="outlined"
-                  margin="normal"
                   error={!!errors.name}
                   helperText={errors.name}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
+              </Grid>
 
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Enter Employee Email"
+                  label="Email Address"
                   name="email"
                   value={employee.email}
                   onChange={handleChange}
-                  variant="outlined"
-                  margin="normal"
                   error={!!errors.email}
                   helperText={errors.email}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
+              </Grid>
 
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   type="password"
-                  label="Enter Password"
+                  label="Password"
                   name="password"
                   value={employee.password}
                   onChange={handleChange}
-                  variant="outlined"
-                  margin="normal"
                   error={!!errors.password}
                   helperText={errors.password}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
+              </Grid>
 
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   type="password"
@@ -167,16 +198,32 @@ const Register = () => {
                   name="confirmPassword"
                   value={employee.confirmPassword}
                   onChange={handleChange}
-                  variant="outlined"
-                  margin="normal"
                   error={!!errors.confirmPassword}
                   helperText={errors.confirmPassword}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
+              </Grid>
 
-                {/* Role Selection */}
-                <FormControl fullWidth margin="normal" error={!!errors.role}>
+              <Grid item xs={12}>
+                <FormControl fullWidth error={!!errors.role}>
                   <InputLabel>Role</InputLabel>
-                  <Select name="role" value={employee.role} onChange={handleChange} variant="outlined">
+                  <Select
+                    name="role"
+                    value={employee.role}
+                    onChange={handleChange}
+                    label="Role"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <AssignmentIndIcon />
+                      </InputAdornment>
+                    }
+                  >
                     <MenuItem value="">Select Role</MenuItem>
                     <MenuItem value="teamleader">Team Leader</MenuItem>
                     <MenuItem value="employee">Employee</MenuItem>
@@ -187,12 +234,23 @@ const Register = () => {
                     </Typography>
                   )}
                 </FormControl>
+              </Grid>
 
-                {/* Specific Role Selection (Only if Employee is selected) */}
-                {employee.role === "employee" && (
-                  <FormControl fullWidth margin="normal" error={!!errors.specificRole}>
+              {employee.role === "employee" && (
+                <Grid item xs={12}>
+                  <FormControl fullWidth error={!!errors.specificRole}>
                     <InputLabel>Specific Role</InputLabel>
-                    <Select name="specificRole" value={employee.specificRole} onChange={handleChange} variant="outlined">
+                    <Select
+                      name="specificRole"
+                      value={employee.specificRole}
+                      onChange={handleChange}
+                      label="Specific Role"
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <WorkIcon />
+                        </InputAdornment>
+                      }
+                    >
                       <MenuItem value="">Select Specific Role</MenuItem>
                       <MenuItem value="Web Developer">Web Developer</MenuItem>
                       <MenuItem value="App Developer">App Developer</MenuItem>
@@ -206,21 +264,24 @@ const Register = () => {
                       </Typography>
                     )}
                   </FormControl>
-                )}
+                </Grid>
+              )}
 
+              <Grid item xs={12}>
                 <Button
                   fullWidth
                   variant="contained"
-                  sx={{ mt: 2, backgroundColor: "#3f85f7" }}
+                  color="primary"
                   onClick={handleSubmit}
                   disabled={loading}
+                  sx={{ py: 1.5, fontWeight: "bold", mt: 1 }}
                 >
-                  {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Register"}
+                  {loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
                 </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
       </Container>
     </Box>
   );
