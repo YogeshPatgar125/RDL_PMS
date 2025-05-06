@@ -309,8 +309,6 @@
 
 
 
-
-
 import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/auth";
@@ -451,7 +449,7 @@ export const getAssignedProjects = async (userId, role) => {
     const url =
       role === "employee"
         ? `${PROJECT_API_URL}/employee/projects/${userId}`
-        : `${PROJECT_API_URL}/teamleader/projects/${userId}`;
+        : `${PROJECT_API_URL}/teamLeader/projects/${userId}`;
     const response = await api.get(url);
     return response.data;
   } catch (error) {
