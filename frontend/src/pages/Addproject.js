@@ -91,7 +91,7 @@ const Addproject = () => {
         setDueDate('');
 
         setTimeout(() => {
-          navigate('/addashboard');
+          navigate('/projectlist');
         }, 2000);
       } else {
         toast.error("Failed to send project details!", {

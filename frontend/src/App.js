@@ -170,6 +170,7 @@ import TeamLeadTasks from "./pages/TeamLeadTasks"
 import TLprojectDetails from "./pages/TLprojectDetails";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import ProjectReport from "./pages/Report";
+import ProjectList from "./pages/projectList";
 
 // Route Protection Component
 const ProtectedRoute = ({ children, roleRequired }) => {
@@ -224,6 +225,7 @@ function App() {
         {/* Admin Routes */}
         <Route path="/addashboard" element={<ProtectedRoute roleRequired="admin"><ADDashboard /></ProtectedRoute>} />
         <Route path="/addproject" element={<ProtectedRoute roleRequired="admin"><Addproject /></ProtectedRoute>} />
+        <Route path="/projectlist" element={<ProtectedRoute roleRequired="admin"><ProjectList /></ProtectedRoute>} />
         <Route path="/assignlead" element={<ProtectedRoute roleRequired="admin"><Assign_Lead /></ProtectedRoute>} />
 
         {/* Team Leader Routes */}
