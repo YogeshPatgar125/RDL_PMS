@@ -7,47 +7,21 @@ import {
   Box,
   Divider,
   CircularProgress,
-  IconButton,
+  TextField,
   Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavigate } from 'react-router-dom';
-
-const AnimatedCounter = ({ target, delay = 0 }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      let start = 0;
-      const end = parseInt(target);
-      const duration = 1000;
-      const incrementTime = 30;
-      const steps = duration / incrementTime;
-      const stepValue = end / steps;
-
-      const counter = setInterval(() => {
-        start += stepValue;
-        if (start >= end) {
-          setCount(end);
-          clearInterval(counter);
-        } else {
-          setCount(Math.ceil(start));
-        }
-      }, incrementTime);
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [target, delay]);
-
-  return <>{count}</>;
-};
 
 const ProjectList = () => {
   const [projectData, setProjectData] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const projectsPerPage = 8;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('');
 
   const navigate = useNavigate();
 
@@ -57,6 +31,7 @@ const ProjectList = () => {
         const response = await fetch('http://localhost:5000/api/projects');
         const data = await response.json();
         setProjectData(data);
+        setFilteredProjects(data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching project data:', error);
@@ -66,6 +41,25 @@ const ProjectList = () => {
     fetchProjects();
   }, []);
 
+  useEffect(() => {
+    let filtered = [...projectData];
+    const lowerSearch = searchTerm.toLowerCase().trim();
+    if (searchTerm) {
+      filtered = filtered.filter((project) =>
+        project.projectName?.toLowerCase().includes(lowerSearch)
+      );
+    }
+
+    if (sortBy === 'project') {
+      filtered.sort((a, b) => a.projectName?.localeCompare(b.projectName));
+    } else if (sortBy === 'dueDate') {
+      filtered.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+    } else if (sortBy === 'status') {
+      filtered.sort((a, b) => (a.status || '').localeCompare(b.status || ''));
+    }
+
+    setFilteredProjects(filtered);
+  }, [searchTerm, sortBy, projectData]);
 
   const normalizeStatus = (status) => (status || '').toLowerCase().trim();
 
@@ -75,10 +69,6 @@ const ProjectList = () => {
     if (['cancelled', 'canceled', 'cancel'].includes(normalized)) return '#f44336';
     return '#ff9800';
   };
-
-  const startIndex = (page - 1) * projectsPerPage;
-  const paginatedProjects = projectData.slice(startIndex, startIndex + projectsPerPage);
-  const totalPages = Math.ceil(projectData.length / projectsPerPage);
 
   return (
     <Box p={3}>
@@ -93,6 +83,30 @@ const ProjectList = () => {
         >
           Add Project
         </Button>
+      </Box>
+
+      <Box display="flex" gap={2} alignItems="center" mb={2}>
+        <TextField
+          variant="outlined"
+          size="small"
+          placeholder="Search project"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ width: '200px' }}
+        />
+        <FormControl size="small" sx={{ minWidth: 160 }}>
+          <InputLabel>Sort By</InputLabel>
+          <Select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            label="Sort By"
+          >
+            <MenuItem value="">None</MenuItem>
+            <MenuItem value="project">Project Name</MenuItem>
+            <MenuItem value="dueDate">Due Date</MenuItem>
+            <MenuItem value="status">Status</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       {loading ? (
@@ -122,20 +136,20 @@ const ProjectList = () => {
                     borderRadius: '8px',
                   }}
                 >
-                  <Grid item xs={1}><Typography>Sl No.</Typography></Grid>
-                  <Grid item xs={3}><Typography>Project Name</Typography></Grid>
-                  <Grid item xs={3}><Typography>Assigned To</Typography></Grid>
-                  <Grid item xs={2}><Typography>Due Date</Typography></Grid>
-                  <Grid item xs={3}><Box sx={{ ml: 4 }}><Typography>Status</Typography></Box></Grid>
+                  <Grid item xs={2.4}><Typography>Sl No.</Typography></Grid>
+                  <Grid item xs={2.4}><Typography>Project Name</Typography></Grid>
+                  <Grid item xs={2.4}><Typography>Assigned To</Typography></Grid>
+                  <Grid item xs={2.4}><Typography>Due Date</Typography></Grid>
+                  <Grid item xs={2.4}><Typography>Status</Typography></Grid>
                 </Grid>
                 <Divider />
-                {paginatedProjects.map((project, index) => (
+                {filteredProjects.map((project, index) => (
                   <Grid container spacing={1} key={index} sx={{ py: 1 }}>
-                    <Grid item xs={1}><Typography>{startIndex + index + 1}</Typography></Grid>
-                    <Grid item xs={3}><Typography>{project.projectName}</Typography></Grid>
-                    <Grid item xs={3}><Typography>{project.teamLeader?.name || 'N/A'}</Typography></Grid>
-                    <Grid item xs={2}><Typography>{project.dueDate || 'N/A'}</Typography></Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2.4}><Typography>{index + 1}</Typography></Grid>
+                    <Grid item xs={2.4}><Typography>{project.projectName}</Typography></Grid>
+                    <Grid item xs={2.4}><Typography>{project.teamLeader?.name || 'N/A'}</Typography></Grid>
+                    <Grid item xs={2.4}><Typography>{project.dueDate || 'N/A'}</Typography></Grid>
+                    <Grid item xs={2.4}>
                       <Box
                         sx={{
                           backgroundColor: getStatusColor(project.status),
@@ -155,28 +169,6 @@ const ProjectList = () => {
                   </Grid>
                 ))}
               </CardContent>
-
-              <Box display="flex" justifyContent="center" alignItems="center" p={2}>
-                <IconButton
-                  size="small"
-                  sx={{ border: '1px solid #1e3a8a', borderRadius: '50%', mx: 1, color: '#1e3a8a' }}
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={page === 1}
-                >
-                  <ChevronLeftIcon />
-                </IconButton>
-                <Typography fontWeight="bold" color="#1e3a8a">
-                  Page {page} of {totalPages}
-                </Typography>
-                <IconButton
-                  size="small"
-                  sx={{ border: '1px solid #1e3a8a', borderRadius: '50%', mx: 1, color: '#1e3a8a' }}
-                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={page === totalPages}
-                >
-                  <ChevronRightIcon />
-                </IconButton>
-              </Box>
             </Card>
           </Grid>
         </Grid>
